@@ -1,0 +1,7 @@
+# Latex Compil
+*.pdf
+*.aux
+*.synctex.gz
+*.toc
+*.out
+*.log
