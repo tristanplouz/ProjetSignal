@@ -31,7 +31,6 @@ figure(1)
 imshow(mot)
 figure(2)
 imshow(B)
-
 d=normxcorr2(ech,mot);
 figure(3)
 colormap("jet");
@@ -55,10 +54,6 @@ for i=1:ia
   endfor
 endfor
 
-
-facx=length(mot(1,:))/length(d(1,:));
-facy=length(mot(:,1))/length(d(:,1));
-
 for i=1:length(res)
-  drawCircle(res(i,2)*facx, res(i,1)*facy, 10)
+  drawCircle(res(i,2)-length(ech(1,:))/2, res(i,1)-length(ech(:,1))/2, 10)
 endfor
