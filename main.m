@@ -2,13 +2,13 @@ clear all;
 close all;
 
 % Import libraries
-graphics_toolkit gnuplot
+%graphics_toolkit gnuplot
 pkg load signal
 pkg load image
 pkg load geometry
 
 % Image read
-B=imread("motif.png");
+B=imread("motif1.png");
 mot=imread("mot.png");
 
 % Transform to gray scale
@@ -36,11 +36,10 @@ figure(3)
 colormap("jet");
 shading("flat");
 
-saveas(surf(d,"edgecolor","none"),"Rapports/illus/cor.png");
+surf(d,"edgecolor","none")
+saveas(figure(3),"Rapports/illus/cor.png");
 view(0,-90)
-V=surf(d,"edgecolor","none")
-view(0,-90)
-saveas(V,"Rapports/illus/cor1.png");
+saveas(figure(3),"Rapports/illus/cor1.png");
 figure(1)
 hold on;
 res=[];
@@ -48,7 +47,7 @@ ja=length(d(1,:))-1;
 ia=length(d(:,1))-1;
 for i=1:ia
   for j=1:ja
-    if d(i,j)>0.8
+    if d(i,j)>0.9
       res=[res; [i,j]];
     endif
   endfor
@@ -57,3 +56,4 @@ endfor
 for i=1:length(res)
   drawCircle(res(i,2)-length(ech(1,:))/2, res(i,1)-length(ech(:,1))/2, 10)
 endfor
+saveas(figure(1),"Rapports/illus/motiflocal.png")
