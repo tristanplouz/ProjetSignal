@@ -8,7 +8,7 @@ pkg load image
 pkg load geometry
 
 % Image read
-B=imread("motif1.png");
+B=imread("motif3.png");
 mot=imread("mot.png");
 
 % Transform to gray scale
@@ -56,4 +56,4 @@ endfor
 for i=1:length(res)
   drawCircle(res(i,2)-length(ech(1,:))/2, res(i,1)-length(ech(:,1))/2, 10)
 endfor
-saveas(figure(1),"Rapports/illus/motiflocal.png")
+saveas(figure(1),"Rapports/illus/motiflocal3.png")

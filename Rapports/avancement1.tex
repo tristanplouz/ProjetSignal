@@ -5,6 +5,7 @@
 \usepackage[francais]{babel}
 \usepackage{mathtools,amssymb,amsthm}
 \usepackage[top=20mm, bottom=25mm, left=15mm, right=15mm]{geometry}
+\usepackage{hyperref}
 
 \newcommand{\octave}{\textit{Octave }}
 
@@ -20,7 +21,7 @@
 	\newpage
 	\section*{Introduction}
 		Dans le cadre du cours de signal dispensé au semestre 8 de la formation en Génie Électrique, nous devons réaliser un projet utilisant les compétences et connaissances acquises dans le cours mais aussi approfondir dans le domaine qui concerne notre sujet.
-		Notre sujet est la \textit{Reconnaissance Optique de Caractères (ROC)}. Avec les méthodes et les outils de traitement du signal, nous allons pouvoir comparer des caractères et ainsi transformer une photo en un fichier texte numérique.
+		Notre sujet est la \textit{Reconnaissance Optique de Caractères (ROC)}. Avec les méthodes et les outils de traitement du signal, nous allons pouvoir comparer des caractères et ainsi transformer une photo en un fichier texte numérique. Vous pouvez retrouver l'intégralité de nos codes sur notre dépôt \href{https://github.com/tristanplouz/ProjetSignal}{github ici}.
 		\subsection{Une image, un signal?}	
 		La première des choses est de définir l'image. Une image en informatique est un tableau où l'image est découpée en petits carrés. Chaque case du tableau correspond à un petit carré de l'image et le contenu du tableau est la quantité de rouge, de vert et de bleu de chaque découpage. Plus il y a de découpage plus l'image est précise.
 		Afin que l'image devienne un objet mathématique nous pouvons la transformer en une matrice, le tableau défini précédemment peut donc devenir la matrice suivante:
@@ -82,13 +83,31 @@
 	\begin{tabular}{|c|c|}
 			\includegraphics[scale=0.18]{illus/cor.png} & \includegraphics[scale=0.18]{illus/cor1.png}\\
 			Représentation des coefficients en 3D  & Représentation des coefficients vue de dessous\\
-	\end{tabular}
+	\end{tabular}\\
 	Avec ces représentations, nous pouvons repérer les occurrences du motif dans l'image. Il faut maintenant récupérer les coordonnées des pics les plus hauts pour localiser le motif.
 	\subsection{L'affichage}
+	Dans la première partie de réalisation de ce projet, nous avons choisi de localiser les caractères recherchés et de représenter cette localisation. Nous avons donc décidé de dessiner un cercle autour des motifs repérés dans l'image.
+	Ainsi après l'exécution du script, le dernier graphique affiché correspond à l'image en niveau de gris où des cercles sont tracés afin d'indiquer les points de similitude entre l'image et le motif.\\
+	\begin{tabular}{|c|c|}
+			\includegraphics[scale=0.2]{illus/motifm0.png} & \includegraphics[scale=0.25]{illus/motiflocal.png}\\
+			Le motif  & Le motif localisé dans l'image\\
+	\end{tabular}\\
+	Afin de placer les cercles, nous parcourons la matrice de corrélation et nous récupérons les coordonnées de chaque point supérieur à un seuil donné. 
 	\section{Fonctionnement}	
-	
+	Nous allons maintenant lancer ce script avec des motifs différents pour montrer le bon fonctionnement du système.\\
+	\begin{tabular}{|c|c|}
+			\includegraphics[scale=0.5]{../motif.png} & \includegraphics[scale=0.2]{illus/motiflocal0.png}\\
+			\includegraphics[scale=0.5]{../motif1.png} & \includegraphics[scale=0.2]{illus/motiflocal1.png}\\
+			\includegraphics[scale=0.5]{../motif2.png} & \includegraphics[scale=0.2]{illus/motiflocal2.png}\\
+			\includegraphics[scale=0.5]{../motif3.png} & \includegraphics[scale=0.2]{illus/motiflocal3.png}\\
+			Le motif  & Le motif localisé dans l'image\\
+	\end{tabular}\\
 	\section{Problèmes restants}
-	Taille caractère
-	postition des cercles de localisation
+	Après différents essais, nous pouvons montrer que certains problèmes persistent et seront à traiter par la suite.
+	En effet, si la matrice représentant le motif à chercher n'est pas de la même taille que le motif dans l'image, la corrélation ne trouvera aucune correspondance. Pour résoudre ce problème, il faut identifié la taille d'un caractère présent dans l'image pour faire correspondre la taille du motif.
+	Avec notre technique actuel, plusieurs points se situe au dessus de notre seuil, c'est pour cela que plusieurs cercles sont tracés pour chaque caractère reconnu. Résoudre ce problème se résumerait à identifier les points proches pour les "rassembler" en une seul occurrence du caractère.
 	\section*{Conclusion}
+	Le projet continue, nous allons dans un premier temps résoudre les problèmes évoqués si dessus, même si certains ne sont pas forcément bloquant pour la suite du projet.
+	Les prochains objectifs sont par exemple implémenter une reconnaissance de tous les caractères de l'image en s'aidant d'une base de motif basique (alphabet en majuscule, puis alphabet complet puis alphabet, chiffres et ponctuation).
+	Un dernier objectif serait de pouvoir identifier les caractères même si ceux si ne sont pas correctement alignés sur une ligne ou légèrement déformés.
 \end{document}
