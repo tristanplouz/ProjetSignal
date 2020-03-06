@@ -37,9 +37,9 @@ colormap("jet");
 shading("flat");
 
 saveas(surf(d,"edgecolor","none"),"Rapports/illus/cor.png");
-view(0,-90)
-V=surf(d,"edgecolor","none")
-view(0,-90)
+%view(0,-90)
+%V=surf(d,"edgecolor","none")
+%view(0,-90)
 saveas(V,"Rapports/illus/cor1.png");
 figure(1)
 hold on;
@@ -48,7 +48,7 @@ ja=length(d(1,:))-1;
 ia=length(d(:,1))-1;
 for i=1:ia
   for j=1:ja
-    if d(i,j)>0.8
+    if d(i,j)>0.7
       res=[res; [i,j]];
     endif
   endfor
