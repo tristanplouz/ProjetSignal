@@ -26,15 +26,15 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.7"
-     inkscape:cx="247.78974"
-     inkscape:cy="539.77108"
+     inkscape:cx="373.50403"
+     inkscape:cy="638.34251"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="false"
-     inkscape:window-width="1366"
-     inkscape:window-height="704"
+     inkscape:window-width="1278"
+     inkscape:window-height="982"
      inkscape:window-x="0"
-     inkscape:window-y="27"
+     inkscape:window-y="20"
      inkscape:window-maximized="1" />
   <metadata
      id="metadata5">
@@ -55,7 +55,7 @@
     <rect
        style="fill:#ffff00;fill-opacity:1;stroke:none;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="rect815"
-       width="203.35118"
+       width="205.24106"
        height="70.303566"
        x="3.7797618"
        y="3.6904759"
@@ -63,7 +63,7 @@
        inkscape:export-ydpi="96" />
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:28.43569374px;line-height:1.25;font-family:'Old London Alternate';-inkscape-font-specification:'Old London Alternate';letter-spacing:0px;word-spacing:0px;fill:#ff5555;fill-opacity:1;stroke:none;stroke-width:0.71089232;"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:28.43569374px;line-height:1.25;font-family:'Old London Alternate';-inkscape-font-specification:'Old London Alternate';letter-spacing:0px;word-spacing:0px;fill:#ff5555;fill-opacity:1;stroke:none;stroke-width:0.71089232"
        x="3.6084266"
        y="29.791466"
        id="text819"
@@ -73,12 +73,12 @@
          id="tspan817"
          x="3.6084266"
          y="29.791466"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Bitstream Vera Sans Mono';-inkscape-font-specification:'Bitstream Vera Sans Mono';stroke-width:0.71089232;fill:#ff5555;">AZERRTYBUIOP</tspan><tspan
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Bitstream Vera Sans Mono';-inkscape-font-specification:'Bitstream Vera Sans Mono';fill:#ff5555;stroke-width:0.71089232">COUCOU CA VA</tspan><tspan
          sodipodi:role="line"
          x="3.6084266"
          y="66.480179"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Bitstream Vera Sans Mono';-inkscape-font-specification:'Bitstream Vera Sans Mono';stroke-width:0.71089232;fill:#ff5555;"
-         id="tspan821">QSDBFGHBKSAD</tspan></text>
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Bitstream Vera Sans Mono';-inkscape-font-specification:'Bitstream Vera Sans Mono';fill:#ff5555;stroke-width:0.71089232"
+         id="tspan821">BIEN ET TOI?</tspan></text>
     <rect
        style="fill:#ffff00;fill-opacity:1;stroke:none;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="rect815-7"
@@ -87,7 +87,8 @@
        x="43.089287"
        y="105.74404"
        inkscape:export-xdpi="96"
-       inkscape:export-ydpi="96" />
+       inkscape:export-ydpi="96"
+       inkscape:export-filename="/home/tristan/Documents/Cours/INSA/GE4/S2/Signal/ProjetSignal/alphabet/edot.png" />
     <text
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:28.43569374px;line-height:1.25;font-family:'Old London Alternate';-inkscape-font-specification:'Old London Alternate';letter-spacing:0px;word-spacing:0px;fill:#ff5555;fill-opacity:1;stroke:none;stroke-width:0.71089232"
@@ -95,12 +96,13 @@
        y="131.84503"
        id="text819-6"
        inkscape:export-xdpi="96"
-       inkscape:export-ydpi="96"><tspan
+       inkscape:export-ydpi="96"
+       inkscape:export-filename="/home/tristan/Documents/Cours/INSA/GE4/S2/Signal/ProjetSignal/alphabet/edot.png"><tspan
          sodipodi:role="line"
          x="42.917942"
          y="131.84503"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Bitstream Vera Sans Mono';-inkscape-font-specification:'Bitstream Vera Sans Mono';fill:#ff5555;stroke-width:0.71089232"
-         id="tspan821-1">R</tspan></text>
+         id="tspan821-1">!</tspan></text>
     <flowRoot
        xml:space="preserve"
        id="flowRoot849"
@@ -121,7 +123,7 @@
            height="148.57143"
            x="-114.28571"
            y="391.09113" /></flowRegion><flowPara
-         id="flowPara837"></flowPara></flowRoot>    <flowRoot
+         id="flowPara837" /></flowRoot>    <flowRoot
        xml:space="preserve"
        id="flowRoot839"
        style="fill:black;fill-opacity:1;stroke:none;font-family:'Old London Alternate';font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;letter-spacing:0px;word-spacing:0px;-inkscape-font-specification:'Old London Alternate';font-stretch:normal;font-variant:normal"><flowRegion
@@ -131,5 +133,65 @@
            height="348.57144"
            x="-71.428574"
            y="319.66254" /></flowRegion><flowPara
-         id="flowPara845"></flowPara></flowRoot>  </g>
+         id="flowPara845" /></flowRoot>    <flowRoot
+       xml:space="preserve"
+       id="flowRoot4542"
+       style="fill:black;fill-opacity:1;stroke:none;font-family:'Old London Alternate';font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;letter-spacing:0px;word-spacing:0px;-inkscape-font-specification:'Old London Alternate';font-stretch:normal;font-variant:normal"><flowRegion
+         id="flowRegion4544"><rect
+           id="rect4546"
+           width="252.85715"
+           height="221.42857"
+           x="71.428574"
+           y="371.09113" /></flowRegion><flowPara
+         id="flowPara4548"></flowPara></flowRoot>    <flowRoot
+       xml:space="preserve"
+       id="flowRoot4550"
+       style="fill:black;fill-opacity:1;stroke:none;font-family:'Old London Alternate';font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;letter-spacing:0px;word-spacing:0px;-inkscape-font-specification:'Old London Alternate';font-stretch:normal;font-variant:normal"><flowRegion
+         id="flowRegion4552"><rect
+           id="rect4554"
+           width="181.42857"
+           height="192.85715"
+           x="98.571426"
+           y="359.66254" /></flowRegion><flowPara
+         id="flowPara4556"></flowPara></flowRoot>    <flowRoot
+       xml:space="preserve"
+       id="flowRoot4558"
+       style="fill:black;fill-opacity:1;stroke:none;font-family:'Old London Alternate';font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;letter-spacing:0px;word-spacing:0px;-inkscape-font-specification:'Old London Alternate';font-stretch:normal;font-variant:normal"><flowRegion
+         id="flowRegion4560"><rect
+           id="rect4562"
+           width="204.28572"
+           height="247.14285"
+           x="104.28571"
+           y="353.94824" /></flowRegion><flowPara
+         id="flowPara4564"></flowPara></flowRoot>    <flowRoot
+       xml:space="preserve"
+       id="flowRoot4566"
+       style="fill:black;fill-opacity:1;stroke:none;font-family:'Old London Alternate';font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;letter-spacing:0px;word-spacing:0px;-inkscape-font-specification:'Old London Alternate';font-stretch:normal;font-variant:normal"><flowRegion
+         id="flowRegion4568"><rect
+           id="rect4570"
+           width="147.14285"
+           height="247.14285"
+           x="120"
+           y="329.66254" /></flowRegion><flowPara
+         id="flowPara4572"></flowPara></flowRoot>    <flowRoot
+       xml:space="preserve"
+       id="flowRoot4574"
+       style="fill:black;fill-opacity:1;stroke:none;font-family:'Old London Alternate';font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;letter-spacing:0px;word-spacing:0px;-inkscape-font-specification:'Old London Alternate';font-stretch:normal;font-variant:normal"><flowRegion
+         id="flowRegion4576"><rect
+           id="rect4578"
+           width="121.42857"
+           height="175.71431"
+           x="162.85715"
+           y="399.66251" /></flowRegion><flowPara
+         id="flowPara4580"></flowPara></flowRoot>    <flowRoot
+       xml:space="preserve"
+       id="flowRoot4582"
+       style="fill:black;fill-opacity:1;stroke:none;font-family:'Old London Alternate';font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;letter-spacing:0px;word-spacing:0px;-inkscape-font-specification:'Old London Alternate';font-stretch:normal;font-variant:normal"><flowRegion
+         id="flowRegion4584"><rect
+           id="rect4586"
+           width="260"
+           height="320"
+           x="121.42857"
+           y="345.37683" /></flowRegion><flowPara
+         id="flowPara4588"></flowPara></flowRoot>  </g>
 </svg>
