@@ -39,7 +39,7 @@ endfunction
 data=glob("alphabet/*.png");
 mot=imread("mot.png");
 mot=picPrep(mot);
-textcreate={}
+textcreate={};
 figure(1)
 imshow(mot)
 
@@ -68,7 +68,7 @@ for i=1:length(data)
   %saveas(figure(3),"Rapports/illus/cor.png");
   %view(0,-90)
   %saveas(figure(3),"Rapports/illus/cor1.png");
-  maxs=findMax(d,0.977);
+  maxs=findMax(d,0.96);
   for i=1:length(maxs)-1
     textcreate{end+1}= {l,[maxs(i,1),maxs(i,2)]};
   endfor
@@ -103,8 +103,39 @@ for j=1:length(textcreate)
   textsorted{end+1}=textcreate{ind};
   textcreate{ind}{2}=[inf,inf];
 endfor
-mot=[]
-for i=1:length(textsorted)
-  mot=[mot char(textsorted{i}(1))];
+nbrlign=0;
+moy=[0,0];
+ligne={};
+for i=2:length(textsorted)-1
+  if textsorted{i}{2}(1)!=textsorted{i-1}{2}(1)
+    nbrlign++;
+    ligne{nbrlign}(1)=textsorted{i}{2}(1);
+    ligne{nbrlign}(2)=1;
+  else
+    moy(1)+=textsorted{i}{2}(2)-textsorted{i-1}{2}(2);
+    moy(2)++;
+    ligne{nbrlign}(2)++;
+  endif
 endfor
-mot
+nbrlign;
+moye=moy(1)/moy(2);
+motl=[];
+textsorted{end+1}=textsorted{end};
+
+for i=1:length(textsorted)-1
+  [textsorted{i+1}(1),textsorted{i}(1),textsorted{i+1}{2},textsorted{i}{2}]
+  if textsorted{i+1}{2}(1)!=textsorted{i}{2}(1)
+    if (textsorted{i+1}{2}(1)-textsorted{i}{2}(1))>length(mot(:,1))/nbrlign
+      motl=[motl char(textsorted{i}(1)) char("\n")];
+    endif
+  else
+    if textsorted{i+1}{2}(2)-textsorted{i}{2}(2)>moye*1.2
+      motl=[motl char(textsorted{i}(1)) char(" ")];
+    elseif textsorted{i+1}{2}(2)-textsorted{i}{2}(2)<moye*0.8
+     motl=motl;
+    else
+      motl=[motl char(textsorted{i}(1))];
+    endif
+  endif
+endfor
+motl
