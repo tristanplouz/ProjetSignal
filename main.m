@@ -31,15 +31,32 @@ nb_carac_line=round(length(mot(1,:))/dx)
 nb_carac_col =round(length(mot(:,1))/dy)
 tot=nb_carac_line*nb_carac_col;
 state=1;
-dx_search = round(length(mot(1,:))/nb_carac_line);
-dy_search = round(length(mot(:,1))/nb_carac_col);
+dx_search = length(mot(1,:))/nb_carac_line;
+dy_search = length(mot(:,1))/nb_carac_col;
 
 mot_pred = "\n";
 
 for j=1:nb_carac_col
+  ymin=dy_search*(j-1)-3;
+  ymax=dy_search*(j-1)+dy_search;
+  if ymax>length(mot(:,1))
+    ymax=length(mot(:,1));
+  endif
+  if ymin<1
+    ymin=1;
+  endif
   for i=1:nb_carac_line
     max_global=0;
     predict="";
+    %Calcul de l'extraction
+      xmin=dx_search*(i-1)-3;
+      xmax=dx_search*(i-1)+dx_search+3;
+      if xmax>length(mot(1,:))
+        xmax=length(mot(1,:));
+      endif
+      if xmin<1
+        xmin=1;
+      endif
     for k=1:length(data)
       % Letter echantillon
       l=strsplit(strsplit(data{k},"/"){2},"."){1};
@@ -51,17 +68,6 @@ for j=1:nb_carac_col
       % Display echantillon
       %figure(2);
       %imshow(ech);
-      %Calcul de l'extraction
-      ymin=dy_search*(j-1)+1;
-      ymax=dy_search*(j-1)+dy_search;
-      xmin=dx_search*(i-1)+1;
-      xmax=dx_search*(i-1)+dx_search;
-      if ymax>length(mot(:,1))
-        ymax=length(mot(:,1));
-      endif
-      if xmax>length(mot(1,:))
-        xmax=length(mot(1,:));
-      endif
       %Display mot
       %figure(4); 
       %imshow(mot(ymin:ymax,xmin:xmax)); 
@@ -76,8 +82,8 @@ for j=1:nb_carac_col
       % Saving the ech performance
       max_local=max(max(d));
       if max_local > max_global
-        max_global = max_local
-        if max_global < 0.85
+        max_global = max_local;
+        if max_global < 0.8
            predict = " ";
         else
             switch l
