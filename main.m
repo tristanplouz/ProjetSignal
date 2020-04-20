@@ -1,6 +1,7 @@
 clear all;
 close all;
 warning off
+sec=sec0=time();
 
 % Import libraries
 %graphics_toolkit gnuplot
@@ -8,35 +9,32 @@ pkg load signal
 pkg load image
 pkg load geometry
 
-function res=picPrep(pic)
+function res=picPrep(pic) %Préparation des images
   pic=rgb2gray(pic); % Transform to gray scale
   pic=im2double(pic);% Transform to double data
-  res=pic-mean(mean(pic));
+  res=pic-mean(mean(pic));% Signal à valeur moyenne nulle
 endfunction
 
-data=glob("alphabet/*.png");
-mot=imread("lorem.png");
+data=glob("alphabet/*.png");%Import des adresses de l'alphabet
+mot=imread("lorem.png");% Import du text à analyser
 mot=picPrep(mot);
+
 %figure(1)
 %imshow(mot)
-dx=dy=0;
-for i=1:length(data)-1
-  tmp=imread(data{i});
-  tmp=picPrep(tmp);
-  dy+=length(tmp(:,1));
-  dx+=length(tmp(1,:));
-endfor
-dy=109;
-dx/=i;
-dx+=11;
+
+tmp=imread("etalon.png");
+tmp=picPrep(tmp);
+dy=length(tmp(:,1))/3;
+dx=length(tmp(1,:))/3;
 
 nb_carac_line=round(length(mot(1,:))/dx)
 nb_carac_col =round(length(mot(:,1))/dy)
-
+tot=nb_carac_line*nb_carac_col;
+state=1;
 dx_search = round(length(mot(1,:))/nb_carac_line);
 dy_search = round(length(mot(:,1))/nb_carac_col);
 
-mot_pred = "";
+mot_pred = "\n";
 
 for j=1:nb_carac_col
   for i=1:nb_carac_line
@@ -51,14 +49,25 @@ for j=1:nb_carac_col
       ech=picPrep(ech);
       
       % Display echantillon
-      figure(2);
-      imshow(ech);
+      %figure(2);
+      %imshow(ech);
+      %Calcul de l'extraction
+      ymin=dy_search*(j-1)+1;
+      ymax=dy_search*(j-1)+dy_search;
+      xmin=dx_search*(i-1)+1;
+      xmax=dx_search*(i-1)+dx_search;
+      if ymax>length(mot(:,1))
+        ymax=length(mot(:,1));
+      endif
+      if xmax>length(mot(1,:))
+        xmax=length(mot(1,:));
+      endif
       %Display mot
-      figure(4); 
-      imshow(mot(dy_search*(j-1)+1:dy_search*(j-1)+dy_search,dx_search*(i-1)+1:dx_search*(i-1)+dx_search)); 
+      %figure(4); 
+      %imshow(mot(ymin:ymax,xmin:xmax)); 
        
       % Intercorrelation 
-      d=normxcorr2(ech,mot(dy_search*(j-1)+1:dy_search*(j-1)+dy_search,dx_search*(i-1)+1:dx_search*(i-1)+dx_search)); 
+      d=normxcorr2(ech,mot(ymin:ymax,xmin:xmax)); 
       %figure(3);
       %figure(3);
       %colormap("jet");
@@ -69,9 +78,20 @@ for j=1:nb_carac_col
       if max_local > max_global
         max_global = max_local
         if max_global < 0.85
-           predict = "\ "
+           predict = " ";
         else
-        predict = l
+            switch l
+              case "qdot"
+                predict = "?";
+              case "edot"
+                predict = "!";
+              case "dot"
+                predict = ".";
+              case "ddot"
+                predict = ":";
+              otherwise
+                predict=l;
+            endswitch
         endif
         if max_global > 0.9
           break
@@ -79,11 +99,15 @@ for j=1:nb_carac_col
       endif
      
     endfor
-    mot_pred = cstrcat(mot_pred, predict)
-    mot_pred
+    mot_pred = cstrcat(mot_pred, predict);
+    mot_pred;
+    disp(cstrcat("Caractère : ",num2str(state)," sur ",num2str(tot) ," en ",num2str(time()-sec),"s (eta ",num2str((tot-state)*(time()-sec)),"s)"))
+    state++;
+    sec=time();
   endfor
-  mot_pred = cstrcat(mot_pred, "\n")
-  mot_pred
+  mot_pred = cstrcat(mot_pred, "\n");
+  mot_pred;
 endfor
 
 mot_pred
+time()-sec0
