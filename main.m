@@ -16,7 +16,8 @@ function res=picPrep(pic) %Préparation des images
 endfunction
 
 data=glob("alphabet/*.png");%Import des adresses de l'alphabet
-mot=imread("lorem.png");% Import du text à analyser
+data=flip(sort(data))%Il y a plus souvent des minuscules que des majuscules et l'ascii les range dans l'autre sens
+mot=imread("lorem2.png");% Import du text à analyser
 mot=picPrep(mot);
 
 %figure(1)
@@ -28,7 +29,7 @@ dy=length(tmp(:,1))/3;
 dx=length(tmp(1,:))/3;
 
 nb_carac_line=round(length(mot(1,:))/dx)
-nb_carac_col =round(length(mot(:,1))/dy)
+nb_carac_col =floor(length(mot(:,1))/dy)
 tot=nb_carac_line*nb_carac_col;
 state=1;
 dx_search = length(mot(1,:))/nb_carac_line;
@@ -89,6 +90,12 @@ for j=1:nb_carac_col
             switch l
               case "qdot"
                 predict = "?";
+              case "ap"
+                predict = "'";
+              case "vir"
+                predict = ",";
+              case "vdot"
+                predict = ";";
               case "edot"
                 predict = "!";
               case "dot"
@@ -107,6 +114,8 @@ for j=1:nb_carac_col
     endfor
     mot_pred = cstrcat(mot_pred, predict);
     mot_pred;
+    max_global
+    predict
     disp(cstrcat("Caractère : ",num2str(state)," sur ",num2str(tot) ," en ",num2str(time()-sec),"s (eta ",num2str((tot-state)*(time()-sec)),"s)"))
     state++;
     sec=time();
