@@ -17,11 +17,9 @@ endfunction
 
 data=glob("alphabet/*.png");%Import des adresses de l'alphabet
 rep=yes_or_no("Le texte contient uniquement des majuscules?");
-if rep
-  %data=data{1:33}
-  data=data(1:33);
-else
-  data=flip(sort(data));%Il y a plus souvent des minuscules que des majuscules et l'ascii les range dans l'autre sens
+if rep 
+
+  data=data(37:end); 
 endif
 mot=imread("lorem2.png");% Import du text à analyser
 mot=picPrep(mot);
@@ -49,7 +47,7 @@ dy_search = length(mot(:,1))/nb_carac_col;
 
 mot_pred = "\n";
 
-for j=3:nb_carac_col
+for j=1:nb_carac_col
   ymin=dy_search*(j-1)-3;
   ymax=dy_search*(j-1)+dy_search;
   if ymax>length(mot(:,1))
@@ -58,7 +56,7 @@ for j=3:nb_carac_col
   if ymin<1
     ymin=1;
   endif
-  for i=17:17%nb_carac_line
+  for i=1:nb_carac_line
     max_global=0;
     predict="";
     %Calcul de l'extraction
@@ -72,18 +70,18 @@ for j=3:nb_carac_col
       endif
     for k=1:length(data)
       % Letter echantillon
-      l=strsplit(strsplit(data{k},"/"){2},"."){1};
+      l=strsplit(strsplit(data{k},"_"){2},"."){1};
       
       % Image read
       ech=imread(data{k});
       ech=picPrep(ech);
       
       % Display echantillon
-      figure(2);
-      imshow(ech);
+      %figure(2);
+      %imshow(ech);
       %Display mot
-      figure(4); 
-      imshow(mot(ymin:ymax,xmin:xmax)); 
+      %figure(4); 
+      %imshow(mot(ymin:ymax,xmin:xmax)); 
        
       % Intercorrelation 
       d=normxcorr2(ech,mot(ymin:ymax,xmin:xmax)); 
