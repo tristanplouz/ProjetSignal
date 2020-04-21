@@ -34,7 +34,13 @@ tmp=picPrep(tmp);
 dy=length(tmp(:,1))/3;
 dx=length(tmp(1,:))/3;
 
-nb_carac_line=round(length(mot(1,:))/dx)
+nb_carac_line=length(mot(1,:))/dx;
+if nb_carac_line-fix(nb_carac_line)>0.5
+  nb_carac_line=ceil(nb_carac_line);
+else
+  nb_carac_line=floor(nb_carac_line);
+endif
+nb_carac_line
 nb_carac_col =floor(length(mot(:,1))/dy)
 tot=nb_carac_line*nb_carac_col;
 state=1;
@@ -43,7 +49,7 @@ dy_search = length(mot(:,1))/nb_carac_col;
 
 mot_pred = "\n";
 
-for j=1:nb_carac_col
+for j=3:nb_carac_col
   ymin=dy_search*(j-1)-3;
   ymax=dy_search*(j-1)+dy_search;
   if ymax>length(mot(:,1))
@@ -52,7 +58,7 @@ for j=1:nb_carac_col
   if ymin<1
     ymin=1;
   endif
-  for i=1:nb_carac_line
+  for i=17:17%nb_carac_line
     max_global=0;
     predict="";
     %Calcul de l'extraction
@@ -73,11 +79,11 @@ for j=1:nb_carac_col
       ech=picPrep(ech);
       
       % Display echantillon
-      %figure(2);
-      %imshow(ech);
+      figure(2);
+      imshow(ech);
       %Display mot
-      %figure(4); 
-      %imshow(mot(ymin:ymax,xmin:xmax)); 
+      figure(4); 
+      imshow(mot(ymin:ymax,xmin:xmax)); 
        
       % Intercorrelation 
       d=normxcorr2(ech,mot(ymin:ymax,xmin:xmax)); 
@@ -89,7 +95,7 @@ for j=1:nb_carac_col
       % Saving the ech performance
       max_local=max(max(d));
       if max_local > max_global
-        max_global = max_local;
+        max_global = max_local
         if max_global < 0.8
            predict = " ";
         else
@@ -109,7 +115,7 @@ for j=1:nb_carac_col
               case "Ddot"
                 predict = ":";
               otherwise
-                predict=l;
+                predict=l
             endswitch
         endif
         if max_global > 0.9

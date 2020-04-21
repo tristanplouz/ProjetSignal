@@ -118,8 +118,23 @@
 		Avec notre technique actuelle, plusieurs points se situent au dessus de notre seuil, c'est pour cela que plusieurs cercles sont tracés pour chaque caractère reconnu. Résoudre ce problème se résumerait à identifier les points proches pour les "rassembler" en une seul occurrence du caractère.
 	\subsection{Second essai}
 	Après avoir essayer de corriger les problèmes développé ci-dessus, nous avons décider d'effectuer des changements dans l’algorithme de fonctionnement de base de notre script. Au lieu de travailler sur toute l'image, on découpe l'image en tuile contenant chacune un caractère, ainsi on applique la corrélation entre le motif et la tuile pour déterminer le caractère contenu dans la tuile.
-	
-	
+	\includegraphics[scale=0.5]{../illus/tuiles.png}
+	On se fait ensuite défiler nos motifs au dessus de chaque tuile pour trouver la meilleur correspondance.
+	Le travail à effectuer se décompose en plusieurs étapes
+		\begin{itemize}
+			\item[$\bullet$] charger et mettre en forme les images ;
+			\item[$\bullet$] déterminer la taille des tuiles et le nombre de celle ci
+			\item[$\bullet$] détecter le caractère présent
+		\end{itemize}
+	\subsubsection{L'image}
+	Pour ce second essai, nous avons garder les mêmes sources d'images que lors du premier essais en les modifiant légèrement. Nous appliquons ensuite le même protocole de mise en forme, passage en niveau de gris, retrait de la valeur moyenne, etc...
+	\subsubsection{Détermination de la taille des tuiles}
+	\subsubsection{Détermination du caractère}
+	\subsubsection{Améliorations apportés au script de base}
+	Nous avons commencé par écrire le script réalisant les fonctions basiques, nous avons ensuite ajouter différentes fonctionnalités pour améliorer notre script.
+	\paragraph{Rapidité}
+	\paragraph{Ponctuations et minuscules}
+	\subsection{Améliorations futures et suites du projet}	
 	\section{Conclusion}
 	
 \end{document}
