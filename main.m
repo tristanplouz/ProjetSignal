@@ -16,7 +16,13 @@ function res=picPrep(pic) %Préparation des images
 endfunction
 
 data=glob("alphabet/*.png");%Import des adresses de l'alphabet
-data=flip(sort(data))%Il y a plus souvent des minuscules que des majuscules et l'ascii les range dans l'autre sens
+rep=yes_or_no("Le texte contient uniquement des majuscules?");
+if rep
+  %data=data{1:33}
+  data=data(1:33);
+else
+  data=flip(sort(data));%Il y a plus souvent des minuscules que des majuscules et l'ascii les range dans l'autre sens
+endif
 mot=imread("lorem2.png");% Import du text à analyser
 mot=picPrep(mot);
 
@@ -51,7 +57,7 @@ for j=1:nb_carac_col
     predict="";
     %Calcul de l'extraction
       xmin=dx_search*(i-1)-3;
-      xmax=dx_search*(i-1)+dx_search+3;
+      xmax=dx_search*(i-1)+dx_search;
       if xmax>length(mot(1,:))
         xmax=length(mot(1,:));
       endif
@@ -88,19 +94,19 @@ for j=1:nb_carac_col
            predict = " ";
         else
             switch l
-              case "qdot"
+              case "Qdot"
                 predict = "?";
-              case "ap"
+              case "Ap"
                 predict = "'";
-              case "vir"
+              case "Vir"
                 predict = ",";
-              case "vdot"
+              case "Vdot"
                 predict = ";";
-              case "edot"
+              case "Edot"
                 predict = "!";
-              case "dot"
+              case "Dot"
                 predict = ".";
-              case "ddot"
+              case "Ddot"
                 predict = ":";
               otherwise
                 predict=l;
@@ -114,9 +120,7 @@ for j=1:nb_carac_col
     endfor
     mot_pred = cstrcat(mot_pred, predict);
     mot_pred;
-    max_global
-    predict
-    disp(cstrcat("Caractère : ",num2str(state)," sur ",num2str(tot) ," en ",num2str(time()-sec),"s (eta ",num2str((tot-state)*(time()-sec)),"s)"))
+    disp(cstrcat("Caractère : ",num2str(state)," sur ",num2str(tot) ," en ",num2str(time()-sec),"s (eta ",num2str((tot-state)*(time()-sec0)/state),"s)"))
     state++;
     sec=time();
   endfor
