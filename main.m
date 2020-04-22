@@ -24,7 +24,31 @@ function res=checkEmptyTile(tile) %Si la tuile est vide il s'agit d'un espace
   endif
 endfunction
 
-while (1)
+function res=countCaracLine(mot)
+  a=0;
+  A=mean(mot);
+  A(A>min(min(mot))+0.001)=100;
+  for i=25:length(A)
+    if A(i)>10+A(i-1)
+      a++;
+    endif
+  endfor
+  res=a+1;
+endfunction
+
+
+function res=countLine(mot)
+  a=0;
+  A=mean(mot');
+  A(A>min(min(mot))+0.0001)=100;
+  for i=25:length(A)-25
+    if A(i)>A(i-1)+10
+      a++;
+    endif
+  endfor
+  res=a+1;
+endfunction
+while (1)%Interface utilisateur Chargement fichier
   file=input("Adresse du fichier(Laisser vide pour default)","s");
   if isempty(file)  
     mot=imread("lorem2.png");% Import du text à analyser 
@@ -38,6 +62,7 @@ while (1)
     end_try_catch
   endif
 endwhile
+
 
 data=glob("alphabet/*.png");%Import des adresses de motif de l'alphabet 
 rep=yes_or_no("Le texte contient uniquement des majuscules?"); 
@@ -61,16 +86,17 @@ tmp=picPrep(tmp);
 dy=length(tmp(:,1))/3; 
 dx=length(tmp(1,:))/3; 
 
-nb_carac_line=length(mot(1,:))/dx; 
-
-if nb_carac_line-fix(nb_carac_line)>0.8 %Seuil réglé après des tests
-  nb_carac_line=ceil(nb_carac_line) 
-elseif nb_carac_line-fix(nb_carac_line)<0.01
-  nb_carac_line=floor(nb_carac_line)-1
-else
-  nb_carac_line=floor(nb_carac_line) 
-endif 
-nb_carac_col =floor(length(mot(:,1))/dy)
+%nb_carac_line=length(mot(1,:))/dx; 
+nb_carac_line=countCaracLine(mot)
+nb_carac_col=countLine(mot)
+##if nb_carac_line-fix(nb_carac_line)>0.8 %Seuil réglé après des tests
+##  nb_carac_line=ceil(nb_carac_line) 
+##elseif nb_carac_line-fix(nb_carac_line)<0.01
+##  nb_carac_line=floor(nb_carac_line)-1
+##else
+##  nb_carac_line=floor(nb_carac_line) 
+##endif 
+%nb_carac_col =floor(length(mot(:,1))/dy)
 tot=nb_carac_line*nb_carac_col; 
 state=1; 
 
