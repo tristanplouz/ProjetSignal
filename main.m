@@ -62,14 +62,14 @@ dy=length(tmp(:,1))/3;
 dx=length(tmp(1,:))/3; 
 
 nb_carac_line=length(mot(1,:))/dx; 
-        nb_carac_line
 if nb_carac_line-fix(nb_carac_line)>0.8 %Seuil réglé après des tests
   nb_carac_line=ceil(nb_carac_line) 
-else 
+else if nb_carac_line-fix(nb_carac_line)<0.08
+  nb_carac_line=floor(nb_carac_line)-1
+else
   nb_carac_line=floor(nb_carac_line) 
 endif 
 nb_carac_col =floor(length(mot(:,1))/dy)
-nb_carac_line=101
 tot=nb_carac_line*nb_carac_col; 
 state=1; 
 
