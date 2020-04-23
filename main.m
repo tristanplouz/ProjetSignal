@@ -16,12 +16,41 @@ function res=picPrep(pic) %Préparation des images
 endfunction 
 
 function res=checkEmptyTile(tile) %Si la tuile est vide il s'agit d'un espace
-  %min(min(tile))/abs(mean(mean(tile)))
   if abs(abs(min(min(tile))/mean(mean(tile)))-1)<10^-5 %Seuil à regler
     res=true;
   else
     res=false;
   endif
+endfunction
+
+function res=withoutMargin(file)
+  A=mean(file);
+  for i=1:length(A)-1
+    if A(i)~=A(i+1)
+      xmin=i;
+      break
+    endif
+  endfor
+  for i=length(A)-1:-1:1
+    if A(i)~=A(i-1)
+      xmax=i;
+      break
+    endif
+  endfor
+  A=mean(file');
+  for i=1:length(A)-1
+    if A(i)~=A(i+1)
+      ymin=i;
+      break
+    endif
+  endfor
+  for i=length(A)-1:-1:1
+    if A(i)~=A(i-1)
+      ymax=i;
+      break
+    endif
+  endfor
+  res=file(ymin:ymax,xmin:xmax);
 endfunction
 
 function res=countCaracLine(mot)
@@ -49,13 +78,13 @@ function res=countLine(mot)
   res=a+1;
 endfunction
 while (1)%Interface utilisateur Chargement fichier
-  file=input("Adresse du fichier(Laisser vide pour default)","s");
-  if isempty(file)  
-    mot=imread("lorem2.png");% Import du text à analyser 
+  fileAdr=input("Adresse du fichier(Laisser vide pour default)","s");
+  if isempty(fileAdr)  
+    file=imread("lorem2.png");% Import du text à analyser 
     break;
   else
     try 
-      mot=imread(file);
+      file=imread(fileAdr);
       break;
     catch 
       disp("Fichier non trouvé");
@@ -63,6 +92,10 @@ while (1)%Interface utilisateur Chargement fichier
   endif
 endwhile
 
+rep=yes_or_no("Le texte foncé sur fond clair?"); 
+if rep 
+  file=255-file;
+endif
 
 data=glob("alphabet/*.png");%Import des adresses de motif de l'alphabet 
 rep=yes_or_no("Le texte contient uniquement des majuscules?"); 
@@ -76,27 +109,13 @@ for k=1:length(data)
   alpha{end+1}={picPrep(imread(data{k})),strsplit(strsplit(data{k},"_"){2},"."){1}};
 endfor
 
-mot=picPrep(mot); 
-
+file=picPrep(file); 
+mot=withoutMargin(file);
 %figure(1) 
 %imshow(mot) 
 
-tmp=imread("etalon.png"); 
-tmp=picPrep(tmp); 
-dy=length(tmp(:,1))/3; 
-dx=length(tmp(1,:))/3; 
-
-%nb_carac_line=length(mot(1,:))/dx; 
 nb_carac_line=countCaracLine(mot)
 nb_carac_col=countLine(mot)
-##if nb_carac_line-fix(nb_carac_line)>0.8 %Seuil réglé après des tests
-##  nb_carac_line=ceil(nb_carac_line) 
-##elseif nb_carac_line-fix(nb_carac_line)<0.01
-##  nb_carac_line=floor(nb_carac_line)-1
-##else
-##  nb_carac_line=floor(nb_carac_line) 
-##endif 
-%nb_carac_col =floor(length(mot(:,1))/dy)
 tot=nb_carac_line*nb_carac_col; 
 state=1; 
 
@@ -196,4 +215,4 @@ for j=1:nb_carac_col
   mot_pred = cstrcat(mot_pred, "\n"); 
 endfor 
 
-disp(cstrcat("Texte extrait de ",file," en ",num2str(time()-sec0),":\n",mot_pred))
+disp(cstrcat("Texte extrait de ",fileAdr," en ",num2str(time()-sec0),":\n",mot_pred))
