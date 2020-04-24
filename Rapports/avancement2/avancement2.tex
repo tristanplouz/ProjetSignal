@@ -6,6 +6,7 @@
 \usepackage{mathtools,amssymb,amsthm}
 \usepackage[top=20mm, bottom=25mm, left=15mm, right=15mm]{geometry}
 \usepackage{hyperref}
+\usepackage{xcolor}
 
 \newcommand{\octave}{\textit{Octave }}
 
@@ -138,9 +139,198 @@
 	\subsubsection{Améliorations apportés au script de base}
 	Nous avons commencé par écrire le script réalisant les fonctions basiques, nous avons ensuite ajouter différentes fonctionnalités pour améliorer notre script.
 	\paragraph{Rapidité}
-	
-	Une fois que la détection des caractères était réalisé, nous avons pensé à de nouvelles stratégies afin de gagner en rapidité.
-	
+	Une fois l'algorithme de détection de caractères suffisamment robuste sur plusieurs exemples d'images, nous avons réfléchi à de nouvelles stratégies afin d'améliorer le temps de détection sur une image complète.
+	\subparagraph{Arrêt de recherche corrélative sur prédiction de maximum}
+	Explication du break
+	\subparagraph{Recherche corrélative suivant un rangement des fréquences d'occurences de caractères}	 
+	 Une des premières pistes a été de considérer l'aspect linguistique d'occurences statistiques des caractères dans des textes de la langue française. Le but était alors de tester la corrélation sur chaque tuile en considérant successivement les caractères du plus au moins répandu dans la langue française plutôt que l'ordre alphabétique traditionnel. Pour ce faire, une courte recherche bibliographique nous a amené sur le site web de typographie \textit{bépo} qui propose un \href{http://bepo.fr/wiki/Fr%C3%A9quence_des_caract%C3%A8res}{\textcolor{blue}{classement des occurences de caractères}} basé sur le corpus Wikipedia français de 2008. La \textsc{Table \ref{freq_carac}} 
+\begin{table}
+\begin{tabular}{|c|c|c|c|}
+\hline
+\textbf{Rang} & \textbf{Caractère} & \textbf{Nb d'occurrences} & \textbf{\%} \\
+\hline
+1 &	e &	115 024 205 & 12,1 \\
+\hline
+2 &	a &	67 563 628 & 7,11 \\
+\hline
+3 &	i &	62 672 992 & 6,59 \\
+\hline
+4 &	s &	61 882 785 & 6,51 \\
+\hline
+5 &	n &	60 728 196 & 6,39 \\
+\hline
+6 &	r &	57 656 209 & 6,07 \\
+\hline
+7 &	t &	56 267 109 & 5,92 \\
+\hline
+8 &	o &	47 724 400 & 5,02 \\
+\hline
+9 &	l &	47 171 247 & 4,96 \\
+\hline
+10 & u & 42 698 875 & 4,49 \\
+\hline
+11 & d & 34 914 685 & 3,67 \\
+\hline
+12 & c & 30 219 574 & 3,18 \\
+\hline
+13 & m & 24 894 034 & 2,62 \\
+\hline
+14 & p & 23 647 179 & 2,49 \\
+\hline
+15 & é & 18 451 937 & 1,94 \\
+\hline
+16 &   & 14 847 201 & 1,56 \\
+\hline
+17 & g & 11 684 140 & 1,23 \\
+\hline
+18 & b & 10 817 171 & 1,14 \\
+\hline
+19 & v & 10 590 858 & 1,11 \\ 
+\hline
+20 & h & 10 583 562 & 1,11 \\ 
+\hline
+21 & f & 10 579 192 & 1,11 \\
+\hline
+22 & , &  9 656 092 & 1,02 \\
+\hline
+23 & 1 &  9 005 786 & 0,95 \\
+\hline
+24 & . &  7 843 682 & 0,83 \\
+\hline
+25 & ' &  7 209 956 & 0,76 \\
+\hline
+26 & 0 &  6 358 672 & 0,67 \\
+\hline
+27 & 9 &  6 340 285 & 0,67 \\
+\hline
+28 & q &  6 140 307 & 0,65 \\
+\hline
+29 & - &  5 718 628 & 0,6  \\
+\hline
+30 & 2 &  5 462 613 & 0,57 \\
+\hline
+31 & y &  4 351 953 & 0,46 \\
+\hline
+32 & 8 &  3 643 296 & 0,38 \\
+\hline
+33 & ) &  3 638 248 & 0,38 \\
+\hline
+34 & ( &  3 624 542 & 0,38 \\
+\hline
+35 & x &  3 588 990 & 0,38 \\
+\hline
+36 & 3 &  3 459 061 & 0,36 \\
+\hline
+37 & 5 &  3 396 449 & 0,36 \\
+\hline
+38 & 6 &  3 376 188 & 0,36 \\
+\hline
+39 & 4 &  3 326 019 & 0,35 \\ 
+\hline
+40 & j &  3 276 064 & 0,34 \\
+\hline
+41 & 7 &  3 244 260 & 0,34 \\
+\hline
+42 & : &  3 155 250 & 0,33 \\
+\hline
+\end{tabular}
+\begin{tabular}{|c|c|c|c|}
+\hline
+\textbf{Rang} & \textbf{Caractère} & \textbf{Nb d'occurrences} & \textbf{\%} \\
+\hline
+43 & è &  2 969 466 & 0,31 \\
+\hline
+44 & à &  2 966 029 & 0,31 \\
+\hline
+45 & k &  2 747 547 & 0,29 \\
+\hline
+46 & ? &  2 188 127 & 0,23 \\
+\hline
+47 & w &  1 653 435 & 0,17 \\
+\hline
+48 & z &  1 433 913 & 0,15 \\
+\hline
+49 & ê &	802 211 & 0,08 \\
+\hline
+50 & " &	759 384 & 0,08 \\
+\hline
+51 & / &	623 640 & 0,07 \\
+\hline
+52 & ç &	544 509 & 0,06 \\
+\hline
+53 & > &	499 481 & 0,05 \\
+\hline
+54 &\# &	493 596 & 0,05 \\
+\hline
+55 & < & 	476 762 & 0,05 \\
+\hline
+56 & · &	429 085 & 0,05 \\
+\hline
+57 &   &	402 911 & 0,04 \\
+\hline
+58 & ; &	379 874 & 0,04 \\
+\hline
+59 & ô &	357 197 & 0,04 \\
+\hline
+60 & « & 	338 547 & 0,04 \\
+\hline
+61 & » &	332 970 & 0,04 \\
+\hline
+62 & â &	320 837 & 0,03 \\
+\hline
+63 & î & 	280 201 & 0,03 \\
+\hline
+64 & ] &	243 399 & 0,03 \\
+\hline
+65 &\{ &	243 170 & 0,03 \\
+\hline
+66 & [ &	241 191 & 0,03 \\
+\hline
+67 &\} &	229 128 & 0,02 \\
+\hline
+68 &$^\circ$&214 463& 0,02 \\
+\hline
+69 & û &    164 516 & 0,02 \\
+\hline
+70 & ù &	151 236 & 0,02 \\
+\hline
+71 & ï &	138 221 & 0,01 \\
+\hline
+72 & = &	121 994 & 0,01 \\
+\hline
+73 &\% &	121 163 & 0,01 \\
+\hline
+74 & + &	109 254 & 0,01 \\
+\hline
+75 & ! &	104 109 & 0,01 \\
+\hline
+76 &\_ &	 87 702 & 0,01 \\
+\hline
+77 & á &	 73 751 & 0,01 \\
+\hline
+78 &\& &	 67 507 & 0,01 \\
+\hline
+79 & ü & 	 55 172 & 0,01 \\
+\hline
+80 &$^2$& 	 54 500 & 0,01 \\
+\hline
+81 & * &	 54 224 & 0,01 \\
+\hline
+82 & ë & 	 53 862 & 0,01 \\
+\hline
+83 & ö & 	 51 020 & 0,01 \\
+\hline
+84 & í &	 48 391 & 0,01 \\ 
+\hline
+\end{tabular}
+\label{freq_carac}
+\end{table}	
+
+L'aspect intéressant de ce classement est notamment d'inclure les caractères spéciaux et de ponctuation que l'on trouve dans la plupart des textes. 
+
+Afin d'implémenter la fréquence des caractères de la langue française , nous avons renommé les images.
+
+\subparagraph{Détection des tuiles vides}
 	
 	\paragraph{Ponctuations et minuscules}
 	\subsection{Améliorations futures et suites du projet}	
