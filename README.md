@@ -9,13 +9,13 @@ Réaliser un script complet permettant de renvoyer le texte contenu dans une ima
 
 ## Réalisation
 Le script est réalisé en utilisant le logiciel GNU-Octave
-Les paquets _signal_, _image_ et _geometry_ sont nécessaires 
-Leurs instalations s'effectuent avec la commande `apt install octave-image octave-geometry octave-signal` 
+Les paquets _signal_, _image_ et _matgeo_ sont nécessaires  
 
 
 ## Images
 Les images sont crées avec le logiciel de dessin Inkscape.
-La police utilisée est _Bitstream Vera Sans Mono_, de taille quelconque, l'algorithme détermine la taille.
+La police utilisée est _Bitstream Vera Sans Mono_, de taille quelconque, l'algorithme détermine la taille de la police automatiquement.
+La détermination du nombre de caractères lorsque l'image ne contient qu'une seul ligne de texte ou des espaces alignés verticalement pose problème, c'est donc à éviter.
 
 #Exécution
 `octave main.m`
