@@ -61,19 +61,22 @@ function res=withoutMargin(file) %Detecte et supprime les marges du document à 
   end_try_catch
 endfunction
 
-function res=countCaracLine(mot) % TO BE UPDATE Compte le nombre de caractères d'une ligne TO BE UPDATE
-  a=0;
+function [res,B]=countCaracLine(mot) % TO BE UPDATE Compte le nombre de caractères d'une ligne TO BE UPDATE
+  a=b=0;
   A=mean(mot);
   A(A>min(min(mot))+0.001)=100;
+  A(A<=min(min(mot))+0.001)=0;
+  B=[A;A;A;A;A;A;A;A;A;A;A;A;A;A;A;A];
   xprec=x=eprec=0;
-  for i=2:length(A)
+  for i=10:length(A)-20
     if A(i)>10+A(i-1)
-      if i-xprec>0.3*eprec
+      if i-xprec>0.85*eprec
         a+=1;
         eprec=i-xprec;
         xprec=i;
       elseif i-xprec>1.9*eprec
         a+=2;
+        eprec=i-xprec;
         xprec=i;
       else
         eprec=i-xprec;
@@ -85,15 +88,15 @@ function res=countCaracLine(mot) % TO BE UPDATE Compte le nombre de caractères 
 endfunction
 
 
-function res=countLine(mot)% TO BE UPDATE Compte le nombre de caractères d'une ligne TO BE UPDATE
+function [res,C]=countLine(mot)% TO BE UPDATE Compte le nombre de caractères d'une ligne TO BE UPDATE
  a=0;
   A=mean(mot');
   A(A>min(min(mot))+0.0001)=100;
   C=[A' A' A' A'];
   yprec=y=eprec=0;
-  for i=2:length(A)
+  for i=10:length(A)-20
     if A(i)>A(i-1)+10
-      if i-yprec>0.3*eprec
+      if i-yprec>0.85*eprec
         a+=1;
         eprec=i-yprec;
         yprec=i;
@@ -134,27 +137,26 @@ mot=withoutMargin(file);%Retire les marges
 %figure(1) 
 %imshow(mot) 
 
-nb_carac_line=countCaracLine(mot)
-nb_carac_col=countLine(mot)
+[nb_carac_line,b]=countCaracLine(mot);
+nb_carac_col=countLine(mot);
 tot=nb_carac_line*nb_carac_col; 
 state=1; 
 
 %Définition des pas de recherche
-dx_search = length(mot(1,:))/nb_carac_line; 
+dx_search = length(mot(1,:))/(nb_carac_line); 
 dy_search = length(mot(:,1))/nb_carac_col; 
 
+%Show Tile cutting
 figure(1)
 hold on;
 imshow(mot)
-for i=0:nb_carac_line
-  for k=0:nb_carac_col
+imshow(b)
+for i=0:nb_carac_line-1
+  for k=0:nb_carac_col-1
     drawRect([i*dx_search-3 k*dy_search-3  dx_search+3 dy_search+3]);
   endfor
 endfor
 hold off
-
-dbquit
-
 
 data=glob("alphabet/*.png");%Import des adresses de motif de l'alphabet 
 rep=yes_or_no("Le texte contient uniquement des majuscules?"); 
