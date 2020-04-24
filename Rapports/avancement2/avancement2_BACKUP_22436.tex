@@ -153,6 +153,23 @@
 	\subsubsection{Améliorations apportés au script de base}
 	Nous avons commencé par écrire le script réalisant les fonctions basiques, nous avons ensuite ajouter différentes fonctionnalités pour améliorer notre script.
 	\paragraph{Rapidité}
+<<<<<<< HEAD
+	\subsection{Résultat Final}
+	Une fois que toutes les améliorations ont été implémenté on peut lancer un test massif sur les performances de notre script.
+	Pour cela, nous avons créer une image finale:\\
+	\includegraphics[scale=0.25]{../../Data/DUDH.png}
+	Nous exécutons ensuite le script.
+	Dans un premier temps, nous obtenons le découpage en tuile suivant:\\
+	\includegraphics[scale=0.25]{../illus/tuilesDUDH.png}
+	Chaque caractère est sur une tuile, on peut donc appliquer l'intercorrelation et trouver chaque caractère.
+	Au bout de 11min40s, nous obtenons le résultat suivant:
+	\includegraphics[scale=0.25]{../illus/diffDUDH.png}
+	Nous pouvons voir sur cette capture du logiciel Meld, permettant de réaliser la comparaison de fichier, que le résultat est totalement satisfaisant, il persiste des erreurs que nous allons maintenant détailler.
+	Dans un premier temps, nous pouvons relever que l'accentuation n'est pas retransmise. Il s'agit là d'un soucis de détection sur le seuil et l'intercorrélation. En effet, les caractères accentués sont des voyelles très présente dans la langue française, mais le "e" est détecté avant de détecter un "e" accentué. L'autre soucis est que l'accent est en bord de tuiles, ce qui le rend moins facilement détectable, et le max de l'image s'effectuera donc plus sur la lettre que sur l'accent.
+	Le second soucis est la ponctuation, et là il s'agit du même soucis, l'intercorrélation ne parvient pas à faire la différence entre une virgule, un point et un point virgule.
+	Le dernier soucis qu'on peut remarquer est là non présence des numéros 4 et 5, alors que les précédents y sont. Cela viens du fait que les chiffres ne sont implémentés dans la base de donnée que de 0 à 3.
+	
+=======
 	Une fois l'algorithme de détection de caractères suffisamment robuste sur plusieurs exemples d'images, nous avons réfléchi à de nouvelles stratégies afin d'améliorer le temps de détection sur une image complète.
 	\subparagraph{Arrêt de recherche corrélative sur prédiction de maximum}
 	Explication du break
@@ -343,23 +360,11 @@
 L'aspect intéressant de ce classement est notamment d'inclure les caractères spéciaux et de ponctuation que l'on trouve dans la plupart des textes. 
 
 Afin d'implémenter la fréquence des caractères de la langue française , nous avons renommé les images.
+
 \subparagraph{Détection des tuiles vides}
-	\subsection{Résultat Final}
-	Une fois que toutes les améliorations ont été implémenté on peut lancer un test massif sur les performances de notre script.
-	Pour cela, nous avons créer une image finale:\\
-	\includegraphics[scale=0.25]{../../Data/DUDH.png}
-	Nous exécutons ensuite le script.
-	Dans un premier temps, nous obtenons le découpage en tuile suivant:\\
-	\includegraphics[scale=0.25]{../illus/tuilesDUDH.png}
-	Chaque caractère est sur une tuile, on peut donc appliquer l'intercorrelation et trouver chaque caractère.
-	Au bout de 11min40s, nous obtenons le résultat suivant:
-	\includegraphics[scale=0.25]{../illus/diffDUDH.png}
-	Nous pouvons voir sur cette capture du logiciel Meld, permettant de réaliser la comparaison de fichier, que le résultat est totalement satisfaisant, il persiste des erreurs que nous allons maintenant détailler.
-	Dans un premier temps, nous pouvons relever que l'accentuation n'est pas retransmise. Il s'agit là d'un soucis de détection sur le seuil et l'intercorrélation. En effet, les caractères accentués sont des voyelles très présente dans la langue française, mais le "e" est détecté avant de détecter un "e" accentué. L'autre soucis est que l'accent est en bord de tuiles, ce qui le rend moins facilement détectable, et le max de l'image s'effectuera donc plus sur la lettre que sur l'accent.
-	Le second soucis est la ponctuation, et là il s'agit du même soucis, l'intercorrélation ne parvient pas à faire la différence entre une virgule, un point et un point virgule.
-	Le dernier soucis qu'on peut remarquer est là non présence des numéros 4 et 5, alors que les précédents y sont. Cela viens du fait que les chiffres ne sont implémentés dans la base de donnée que de 0 à 3.
 	
 	\paragraph{Ponctuations et minuscules}
+>>>>>>> 4f94b19eaab8121001ea5daf2df13b7b9a37a141
 	\subsection{Améliorations futures et suites du projet}	
 	Maintenant que notre script fonctionne bien, nous pouvons nous concentrer sur les petits détails. Dans un premier temps, inclure tous les caractères et les classer dans le bon ordre dans la base de donnée. Cela permettra de "lire" tous les documents possibles. Dans un second temps, pour augmenter la performance du script, il faut trouver un système permettant de reconnaître les caractères accentués ainsi que tous les caractères de ponctuations.
 	\section{Conclusion}
