@@ -7,3 +7,4 @@
 *.log
 octave-workspace
 test.m
+output.txt
