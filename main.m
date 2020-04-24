@@ -186,13 +186,13 @@ clear file
 %Information Utilisateur
 disp("Éléments chargés en ")
 disp(strcat(num2str(time()-sec),"s"))
-disp("Nombre de caractère detecté:")
+disp("Nombre de caractère détecté:")
 disp(tot)
-disp("Caratère par ligne:")
+disp("Caractère par ligne:")
 disp(nb_carac_line)
 disp("Nombre de ligne:")
 disp(nb_carac_col)
-disp("Facteur d'echelle:")
+disp("Facteur d'échelle:")
 disp(scam)
 disp("Début de l'analyse...")
 sec=time();

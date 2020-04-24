@@ -150,14 +150,23 @@
 	\includegraphics[scale=0.25]{../illus/2corv.png}
 	Les deux caractères sont identiques, le maximum est donc aux alentours de 0.9.
 	
-	\subsubsection{Améliorations apportés au script de base}
+	\subsubsection{Améliorations apportées au script de base}
 	Nous avons commencé par écrire le script réalisant les fonctions basiques, nous avons ensuite ajouter différentes fonctionnalités pour améliorer notre script.
+	\paragraph{Ajout d'autres caractères}
+	Nos premiers essais se contentait de la détection des lettres capitales, très petites portions des caractères fréquemment utilisé dans les textes. Nous avons donc augmenté la gamme de caractères disponible en ajoutant par exemple la ponctuation et les minuscules.	
+	\paragraph{Détection des marges} 
+	En effet, l'image n'est pas forcément uniquement du texte, qui commence dès la première colonne et se termine à la dernière et de même pour les lignes.
+	Nous allons donc prévoir le retrait des marges aux bords de l'image, pour cela nous cherchons les premières lignes et colonnes non vides, en extrayant l'image contenu entre la première et dernière ligne et la première et dernière colonne non vide. On détecte les lignes et les colonnes non vide en calculant la valeur moyenne de la colonne. Si la valeur moyenne de la colonne est différente de la précédente, on est donc sur la première colonne non vide. De même pour les colonnes et pour détecter les dernière on part de la fin et on recule.
+	Cette méthode fonctionne car nos images sont à fond uni.
+	\paragraph{Taille des caractères}
+	Avec la méthode de comptage des caractères s'appuyant sur les espaces présents entre les caractères, nous déterminons un nombre de caractère, en divisant la taille de l'image par ce nombre de caractères ou de lignes, nous pouvons déterminer la "surface" d'un caractère. Nos caractères dans la base de donnée sont d'une très grande taille, comme cela, nous pouvons les redimensionner pour qu'ils correspondent à la taille des caractères de l'image à analyser
 	\paragraph{Rapidité}
 	Une fois l'algorithme de détection de caractères suffisamment robuste sur plusieurs exemples d'images, nous avons réfléchi à de nouvelles stratégies afin d'améliorer le temps de détection sur une image complète.
+	En effet, le temps de calcul de la corrélation dépend uniquement de la taille des images, si elles sont plus petite (en nombre de pixel) le calcul se fera plus vite. Nous ne pouvons pas attendre une accélération à ce niveau là, nous avons donc agit sur d'autres points.
 	\subparagraph{Arrêt de recherche corrélative sur prédiction de maximum}
 	Explication du break. Le break c'est sympa car plus rapide.
-	\subparagraph{Recherche corrélative suivant un rangement des fréquences d'occurences de caractères}	 
-	 Une des premières pistes a été de considérer l'aspect linguistique d'occurences statistiques des caractères dans des textes de la langue française. Le but était alors de tester la corrélation sur chaque tuile en considérant successivement les caractères du plus au moins répandu dans la langue française plutôt que l'ordre alphabétique traditionnel. Pour ce faire, une courte recherche bibliographique nous a amené sur le site web de typographie \textit{bépo} qui propose un \href{http://bepo.fr/wiki/Fr%C3%A9quence_des_caract%C3%A8res}{\textcolor{blue}{classement des occurences de caractères}} basé sur le corpus Wikipedia français de 2008. La \textsc{Table \ref{freq_carac}} 
+	\subparagraph{Recherche corrélative suivant un rangement des fréquences d’occurrences de caractères}	 
+	 Une des premières pistes a été de considérer l'aspect linguistique d’occurrences statistiques des caractères dans des textes de la langue française. Le but était alors de tester la corrélation sur chaque tuile en considérant successivement les caractères du plus au moins répandu dans la langue française plutôt que l'ordre alphabétique traditionnel. Pour ce faire, une courte recherche bibliographique nous a amené sur le site web de typographie \textit{bépo} qui propose un \href{http://bepo.fr/wiki/Fr%C3%A9quence_des_caract%C3%A8res}{\textcolor{blue}{classement des occurences de caractères}} basé sur le corpus Wikipedia français de 2008. La \textsc{Table \ref{freq_carac}} 
 \begin{table}
 \begin{tabular}{|c|c|c|c|}
 \hline
@@ -344,6 +353,45 @@ L'aspect intéressant de ce classement est notamment d'inclure les caractères s
 
 Afin d'implémenter la fréquence des caractères de la langue française , nous avons renommé les images.
 \subparagraph{Détection des tuiles vides}
+
+\paragraph{Ajout d'interfaces avec l'utilisateur}
+	Les premiers tests avec l'adresse de l'image implémenté "en dur" dans le code sont pratiques mais dès que l'on travaille avec plusieurs images, cela devient embêtant de changer le code à chaque fois. Nous avons donc mis une entrée utilisateur pour sélectionner le fichier à analyser.
+	Nous avons aussi rajouter des questions pour le bon et rapide fonctionnement du script, comme la gamme de couleur de l'image (Fond foncé ou fond clair) et si le texte ne contient que des majuscules, en effet si c'est le cas, pas besoin de charger et de tester toutes les minuscules.
+	Nous avons aussi rajouter une interface utilisateur pour l'informer. Nous avons donc des informations progressivement sur l'avancement du traitement et le temps estimé. Nous avons au final un message résumant toutes les informations:
+	\texttt{\\
+	Adresse du fichier(Laisser vide pour default)Data/lorem.png\\
+Le texte foncé sur fond clair?(yes or no) no\\
+Le texte contient uniquement des majuscules?(yes or no) yes\\
+Chargement des éléments...\\
+Éléments chargés en \\
+14.6307s\\
+Nombre de caractère détecté:\\
+ 125\\
+Caractère par ligne:\\
+ 25\\
+Nombre de ligne:\\
+ 5\\
+Facteur d'échelle:\\
+ 0.20559\\
+Début de l'analyse...\\
+Caractère : 1 sur 125 en 1.1655s (eta 1967.7926s)\\
+Caractère : 2 sur 125 en 3.4692s (eta 1189.454s)\\
+Caractère : 3 sur 125 en 3.2777s (eta 919.8982s)\\
+Caractère : 4 sur 125 en 3.3176s (eta 784.6771s)\\
+Caractère : 5 sur 125 en 3.4027s (eta 704.2605s)\\
+	...\\
+Caractère : 120 sur 125 en 0.002918s (eta 12.2507s)\\
+Caractère : 121 sur 125 en 0.003238s (eta 9.7197s)\\
+Caractère : 122 sur 125 en 0.002944s (eta 7.2302s)\\
+Caractère : 123 sur 125 en 0.0027471s (eta 4.781s)\\
+Caractère : 124 sur 125 en 0.0036941s (eta 2.3713s)\\
+Caractère : 125 sur 125 en 0.0030529s (eta 0s)\\
+Texte extrait de Data/lorem.png en 294.0443:\\
+LOREM IPSUM DOLOR SIT AME\\
+NULLAM FEUGIAT JUSTO RISU\\
+ENIM RHONCUS.PROIN ID PEL\\
+LENTESOUE NUNC. PELLENTES\\
+OUE EU RUTRUM EX.\\}
 	\subsection{Résultat Final}
 	Une fois que toutes les améliorations ont été implémenté on peut lancer un test massif sur les performances de notre script.
 	Pour cela, nous avons créer une image finale:\\
@@ -361,7 +409,7 @@ Afin d'implémenter la fréquence des caractères de la langue française , nous
 	
 	\paragraph{Ponctuations et minuscules}
 	\subsection{Améliorations futures et suites du projet}	
-	Maintenant que notre script fonctionne bien, nous pouvons nous concentrer sur les petits détails. Dans un premier temps, inclure tous les caractères et les classer dans le bon ordre dans la base de donnée. Cela permettra de "lire" tous les documents possibles. Dans un second temps, pour augmenter la performance du script, il faut trouver un système permettant de reconnaître les caractères accentués ainsi que tous les caractères de ponctuations.
+	Maintenant que notre script fonctionne bien, nous pouvons nous concentrer sur les petits détails. Dans un premier temps, inclure les 84 caractères et les classer dans le bon ordre dans la base de donnée tel qu'ils sont définis ci dessus. Cela permettra de "lire" tous les documents possibles. Dans un second temps, pour augmenter la performance du script, il faut trouver un système permettant de reconnaître les caractères accentués ainsi que tous les caractères de ponctuations.
 	\section{Conclusion}
 	
 \end{document}
