@@ -74,7 +74,7 @@
 		La corrélation est un outil fonctionnant beaucoup mieux sur des signaux à valeurs moyennes nulles.
 	\section{Solutions}
 		\subsection{Premier essai}
-		\paragraph*{Nous avons dans un premier temps essayé de travailler sur l'image entière, cette méthode est le contenu du premier rapport d'avancement et des paragraphes ci-dessous.}
+		\paragraph*{Nous avons dans un premier temps essayé de travailler sur l'image entière, cette méthode est le contenu du premier rapport d'avancement et des paragraphes ci-dessous. Le second essai est disponible \hyperref[essai2]{page~\pageref*{essai2}}}
 				
 		Nous allons écrire un script \octave qui permet dans un premier temps de charger un motif et une autre image dans le but de chercher ce motif dans l'image. Nous pouvons décomposer notre script en plusieurs étapes:
 		\begin{itemize}
@@ -83,6 +83,7 @@
 			\item[$\bullet$] finalement afficher la localisation.
 		\end{itemize}	   
 		\subsubsection{L'image}
+		\label{image}
 		Avant de vouloir exploiter des images, nous devons tous d'abord les créer. Nous allons donc sur un logiciel de dessin numérique et nous créons deux images, un motif et une image contenant une ou plusieurs fois ce motif.
 			
 		Nous importons les images dans \octave et nous les convertissons en une matrice de matrice, puis nous récupérons ensuite l'image en niveau de gris. La dernière étape avant de pourvoir appliquer l'intercorrélation sur les images est la transformation des signaux en signaux à valeurs moyennes nulles. Nous enlevons alors la valeur moyenne de la matrice à chaque élément.
@@ -117,8 +118,9 @@
 		En effet, si la matrice représentant le motif à chercher n'est pas de la même taille que le motif dans l'image, la corrélation ne trouvera aucune correspondance. Pour résoudre ce problème, il faudra identifier la taille d'un caractère présent dans l'image pour faire correspondre la taille du motif.
 		Avec notre technique actuelle, plusieurs points se situent au dessus de notre seuil, c'est pour cela que plusieurs cercles sont tracés pour chaque caractère reconnu. Résoudre ce problème se résumerait à identifier les points proches pour les "rassembler" en une seul occurrence du caractère.
 	\subsection{Second essai}
+	\label{essai2}
 	Après avoir essayer de corriger les problèmes développé ci-dessus, nous avons décider d'effectuer des changements dans l’algorithme de fonctionnement de base de notre script. Au lieu de travailler sur toute l'image, on découpe l'image en tuile contenant chacune un caractère, ainsi on applique la corrélation entre le motif et la tuile pour déterminer le caractère contenu dans la tuile.
-	\includegraphics[scale=0.5]{../illus/tuile.png}
+	\includegraphics[scale=0.5]{../illus/tuiles.png}
 	On se fait ensuite défiler nos motifs au dessus de chaque tuile pour trouver la meilleur correspondance.
 	Le travail à effectuer se décompose en plusieurs étapes:
 		\begin{itemize}
@@ -127,19 +129,46 @@
 			\item[$\bullet$] détecter le caractère présent
 		\end{itemize}
 	\subsubsection{L'image}
-	Pour ce second essai, nous avons gardé les mêmes sources d'images que lors du premier essais en les modifiant légèrement (changement de tailles et de couleurs). Nous appliquons ensuite le même protocole de mise en forme, passage en niveau de gris, retrait de la valeur moyenne, etc...
+	Pour ce second essai, nous avons gardé les mêmes sources d'images que lors du premier essais en les modifiant légèrement (changement de tailles et de couleurs). Nous appliquons ensuite le même protocole, \hyperref[image]{comme détaillé ici}, de mise en forme, passage en niveau de gris, retrait de la valeur moyenne, etc... 
 	\subsubsection{Détermination de la taille des tuiles}
-	Plusieurs méthodes étaient possible pour déterminer la taille des tuiles, nous avons dans un premier temps utilisé la taille des motifs pour déterminer la taille des caractères sur l'image à décoder, cette méthode est très performante mais ne permet pas de gérer des caractères de taille différente, en effet les valeurs sont liées dans le processus. Nous nous sommes donc basé sur les espaces inter-caractère. En effet entre chaque caractère un petit espace est présent, la police étant une police monospace, la taille des caractères est identiques et ils sont donc tous alignés sur une "grille". Cette espace est détectable, en effet en faisant la moyenne des valeurs la colonne on peut identifier les écarts.
+	Plusieurs méthodes étaient possible pour déterminer la taille des tuiles, nous avons dans un premier temps utilisé la taille des motifs pour déterminer la taille des caractères sur l'image à décoder, cette méthode est très performante mais ne permet pas de gérer des caractères de taille différente, en effet les valeurs sont liées dans le processus. Nous nous sommes donc basé sur les espaces inter-caractères. En effet entre chaque caractère un petit espace est présent, la police étant une police monospace, la taille des caractères est identiques et ils sont donc tous alignés sur une "grille". Cette espace est détectable, en effet en faisant la moyenne des valeurs la colonne on peut identifier les écarts.
 	\includegraphics[scale=0.5]{../illus/detectionSpace.png}
 	Ainsi en comptant le nombre d'espaces détecter nous pouvons déterminer le nombre de caractères par ligne.
 	On effectue le même processus, en faisant la moyenne sur les lignes pour détecter le nombre de ligne.
 	Il faut ensuite faire attention aux faux écarts, induit par les point et accents sur les lignes et par les espaces sur les colonnes.
+	Le système rencontre quelques soucis sur les espaces et les points sur les "i".
 	\subsubsection{Détermination du caractère}
+	Maintenant qu'on a isolé chaque caractère de l'image dans une tuile, on peut déterminer le caractère présent sur celle ci. En calculant l'intercorrélation de la tuile et de chaque lettre et en relevant le maximum, on peut déterminer le caractère en présence.\\
+	\includegraphics[scale=0.25]{../illus/tuile.png}
+	\includegraphics[scale=0.25]{../illus/2ech.png}
+	\includegraphics[scale=0.25]{../illus/2cor.png}
+	Les deux caractères ne sont pas identiques, le maximum est donc aux alentours de 0.4.
+	\\
+	\includegraphics[scale=0.25]{../illus/tuilev.png}
+	\includegraphics[scale=0.25]{../illus/2echv.png}
+	\includegraphics[scale=0.25]{../illus/2corv.png}
+	Les deux caractères sont identiques, le maximum est donc aux alentours de 0.9.
+	
 	\subsubsection{Améliorations apportés au script de base}
 	Nous avons commencé par écrire le script réalisant les fonctions basiques, nous avons ensuite ajouter différentes fonctionnalités pour améliorer notre script.
 	\paragraph{Rapidité}
-	\paragraph{Ponctuations et minuscules}
+	\subsection{Résultat Final}
+	Une fois que toutes les améliorations ont été implémenté on peut lancer un test massif sur les performances de notre script.
+	Pour cela, nous avons créer une image finale:\\
+	\includegraphics[scale=0.25]{../../Data/DUDH.png}
+	Nous exécutons ensuite le script.
+	Dans un premier temps, nous obtenons le découpage en tuile suivant:\\
+	\includegraphics[scale=0.25]{../illus/tuilesDUDH.png}
+	Chaque caractère est sur une tuile, on peut donc appliquer l'intercorrelation et trouver chaque caractère.
+	Au bout de 11min40s, nous obtenons le résultat suivant:
+	\includegraphics[scale=0.25]{../illus/diffDUDH.png}
+	Nous pouvons voir sur cette capture du logiciel Meld, permettant de réaliser la comparaison de fichier, que le résultat est totalement satisfaisant, il persiste des erreurs que nous allons maintenant détailler.
+	Dans un premier temps, nous pouvons relever que l'accentuation n'est pas retransmise. Il s'agit là d'un soucis de détection sur le seuil et l'intercorrélation. En effet, les caractères accentués sont des voyelles très présente dans la langue française, mais le "e" est détecté avant de détecter un "e" accentué. L'autre soucis est que l'accent est en bord de tuiles, ce qui le rend moins facilement détectable, et le max de l'image s'effectuera donc plus sur la lettre que sur l'accent.
+	Le second soucis est la ponctuation, et là il s'agit du même soucis, l'intercorrélation ne parvient pas à faire la différence entre une virgule, un point et un point virgule.
+	Le dernier soucis qu'on peut remarquer est là non présence des numéros 4 et 5, alors que les précédents y sont. Cela viens du fait que les chiffres ne sont implémentés dans la base de donnée que de 0 à 3.
+	
 	\subsection{Améliorations futures et suites du projet}	
+	Maintenant que notre script fonctionne bien, nous pouvons nous concentrer sur les petits détails. Dans un premier temps, inclure tous les caractères et les classer dans le bon ordre dans la base de donnée. Cela permettra de "lire" tous les documents possibles. Dans un second temps, pour augmenter la performance du script, il faut trouver un système permettant de reconnaître les caractères accentués ainsi que tous les caractères de ponctuations.
 	\section{Conclusion}
 	
 \end{document}

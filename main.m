@@ -1,6 +1,6 @@
 clear all; 
 close all; 
-%warning off
+warning off
 
 % Import libraries 
 %graphics_toolkit gnuplot 
@@ -56,7 +56,7 @@ function res=withoutMargin(file)
     endif
   endfor
   try
-    res=file(ymin:ymax,xmin:xmax+15);
+    res=file(3-ymin:ymax+3,3-xmin:xmax+3);
   catch
     res=file(ymin:ymax,xmin:xmax);
   end_try_catch
@@ -139,7 +139,7 @@ mot=withoutMargin(file);%Retire les marges
 %imshow(mot) 
 
 %Calcul du nombre de caractères
-nb_carac_line=countCaracLine(mot);
+[nb_carac_line,b]=countCaracLine(mot);
 nb_carac_col=countLine(mot);
 tot=nb_carac_line*nb_carac_col; 
 state=1; 
@@ -149,21 +149,22 @@ dx_search = length(mot(1,:))/(nb_carac_line);
 dy_search = length(mot(:,1))/nb_carac_col; 
 
 %Affichage du découpage en tuile
-##figure(1)
-##hold on;
-##imshow(mot)
+figure(1)
+hold on;
+imshow(mot)
 ##imshow(b)
-##for i=0:nb_carac_line-1
-##  for k=0:nb_carac_col-1
-##    drawRect([i*dx_search-3 k*dy_search-3  dx_search+3 dy_search+3]);
-##  endfor
-##endfor
-##hold off
+for i=0:nb_carac_line-1
+  for k=0:nb_carac_col-1
+    drawRect([i*dx_search-3 k*dy_search-3  dx_search+3 dy_search+3]);
+  endfor
+endfor
+hold off
+saveas(figure(1),"Rapports/illus/tuilesDUDH.png");
 
 data=glob("alphabet/*.png");%Import des adresses de motif de l'alphabet 
 rep=yes_or_no("Le texte contient uniquement des majuscules?"); 
 if rep 
-  data=data(37:end); %On importe que les majuscules et la ponctuation
+  data=data(46:end); %On importe que les majuscules et la ponctuation
 endif
 
 sec=sec0=time(); %init du chronomètre
@@ -237,20 +238,23 @@ for j=1:nb_carac_col %Pour chaque ligne
       endif
       
 %Display échantillon 
-      %figure(2); 
-      %imshow(ech); 
+##      figure(2); 
+##      imshow(ech); 
 %Display tuile 
-      %figure(3);  
-      %imshow(tile);
+##      figure(3);  
+##      imshow(tile);
       
 %Intercorrelation  
       d=normxcorr2(ech,tile);  
  
 %Display correlation
-      %figure(4); 
-      %colormap("jet"); 
-      %surf(d,"edgecolor","none") 
-      
+##      figure(4); 
+##      colormap("jet"); 
+##      surf(d,"edgecolor","none") 
+##      saveas(figure(3),"Rapports/illus/tuilev.png");
+##      saveas(figure(2),"Rapports/illus/2echv.png");
+##      saveas(figure(4),"Rapports/illus/2corv.png");
+
       max_local=max(max(d)); 
       if max_local > max_global 
 %Chargement de la lettre echantillon
@@ -280,13 +284,14 @@ for j=1:nb_carac_col %Pour chaque ligne
                 predict=l;
             endswitch 
         endif 
-        if max_global > 0.84
+        if max_global > 0.9
           switch predict
             case 'v'
             case 'n'
             case '.'
             case ','
             case ';'
+            case 'o'
             otherwise 
                 break
           endswitch 
