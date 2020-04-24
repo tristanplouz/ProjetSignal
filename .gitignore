@@ -6,3 +6,4 @@
 *.out
 *.log
 octave-workspace
+test.m
