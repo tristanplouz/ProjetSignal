@@ -15,6 +15,7 @@ Les paquets _signal_, _image_ et _matgeo_ sont nécessaires
 ## Images
 Les images sont crées avec le logiciel de dessin Inkscape.
 La police utilisée est _Bitstream Vera Sans Mono_, de taille quelconque, l'algorithme détermine la taille de la police automatiquement.
+Il faut un fond uni mais les caractères peuvent être multicolor.
 La détermination du nombre de caractères lorsque l'image ne contient qu'une seul ligne de texte ou des espaces alignés verticalement pose problème, c'est donc à éviter.
 
 #Exécution

@@ -280,12 +280,16 @@ for j=1:nb_carac_col %Pour chaque ligne
                 predict=l;
             endswitch 
         endif 
-        if max_global > 0.88
-          %predict
-          %if predict~='v' %|| predict~='n' || predict~='.'|| predict~=','|| predict~=';' %Caractère à risque
-            %disp("out")
-            break %Si on est sûr du résultat on arrête de chercher
-          %endif
+        if max_global > 0.84
+          switch predict
+            case 'v'
+            case 'n'
+            case '.'
+            case ','
+            case ';'
+            otherwise 
+                break
+          endswitch 
         endif 
       endif 
       
