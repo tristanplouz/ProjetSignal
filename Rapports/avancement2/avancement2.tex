@@ -73,7 +73,16 @@
 		\item[$\bullet$] \texttt{normxcorr2}, du paquet \texttt{image}, permettant de calculer les coefficients de corrélation normalisés entre deux images. 
 		\end{itemize}		
 		La corrélation est un outil fonctionnant beaucoup mieux sur des signaux à valeurs moyennes nulles.
-	\section{Solutions}
+		\subsection{Nos objectifs}
+		Avant de commencer le projet, nous avons défini des objectifs assez modestes que nous espérons atteindre. Nous souhaitons partir d'une image à fond uni de n'importe quelle taille contenant du texte dans une certaine police. Nous allons travailler avec la police \texttt{Bitstream Vera Sans Mono}. Il s'agit d'une police monospace, cela signifie que chaque caractère fait la même largeur.\\
+		\begin{center}
+			\includegraphics[scale=0.1]{../../Data/fullpage.png}
+			\includegraphics[scale=0.1]{../../Data/poesie.png}
+			\includegraphics[scale=0.1]{../../Data/lorem.png}
+		\end{center}
+		
+Ainsi en partant de ces images, il faudra obtenir le texte contenu. Nous verrons les différentes étapes du traitement et nos résultats dans la suite de notre rapport.
+		\section{Solutions}
 		\subsection{Premier essai}
 		\paragraph*{Nous avons dans un premier temps essayé de travailler sur l'image entière, cette méthode est le contenu du premier rapport d'avancement et des paragraphes ci-dessous. Le second essai est disponible \hyperref[essai2]{page~\pageref*{essai2}}}
 				
@@ -362,7 +371,7 @@ L'aspect intéressant de ce classement est notamment d'inclure les caractères s
 Afin d'implémenter l'utilisation d'un tel classement, nous avons renommé les échantillons de caractères utilisés pour les calculs de corrélation. Pour ce faire nous avons ajouté au nom de chaque échantillon la numérotation du rang qui lui correspond dans la \textsc{Table \ref{freq_carac}}, ce qui permet notamment aux caractères d'être placés dans cet ordre dans le tableau de cellules \texttt{alpha}. Ils seront donc utilisés dans ce même ordre lors du parcours par index croissant dans les boucles de recherches corrélatives.
 
 \subparagraph{Détection des tuiles vides}
-Un autre poste de perte de temps était la détection des espaces, en effet aucun caractère ne ressemble à un espace donc il parcourait toute notre base de caractère afin de ne rien trouver. Pour prévenir la recherche inutile, nous observons la tuile, si celle ci est monochrome, on considère que c'est un espace. Ce calcul est beaucoup plus rapide que faire l'intercorrélation de chaque caractère. Pour cela nous comparons la valeur moyenne et la valeur minimum, plus celles-ci sont proches plus la tuile est vide et donc est un espace.
+Un autre poste de perte de temps était la détection des espaces, en effet aucun caractère ne ressemble à un espace donc il parcourait toute notre base de caractère afin de ne rien trouver. Pour prévenir la recherche inutile, nous observons la tuile, si celle ci est monochrome, on considère que c'est un espace. Ce calcul est beaucoup plus rapide que faire l'intercorrélation de chaque caractère. Pour cela nous comparons la valeur moyenne et la valeur minimum, plus celles-ci sont proches plus la tuile est vide et donc c'est un espace.
 
 \paragraph{Ajout d'interfaces avec l'utilisateur}
 	Les premiers tests avec l'adresse de l'image implémenté "en dur" dans le code sont pratiques mais dès que l'on travaille avec plusieurs images, cela devient embêtant de changer le code à chaque fois. Nous avons donc mis une entrée utilisateur pour sélectionner le fichier à analyser.
@@ -403,7 +412,6 @@ ENIM RHONCUS.PROIN ID PEL\\
 LENTESOUE NUNC. PELLENTES\\
 OUE EU RUTRUM EX.\\}
 
-\subparagraph{Détection des tuiles vides}
 	\subsection{Résultat Final}
 	Une fois que toutes les améliorations ont été implémenté on peut lancer un test massif sur les performances de notre script.
 	Pour cela, nous avons créer une image finale:\\
@@ -419,7 +427,11 @@ OUE EU RUTRUM EX.\\}
 	Le second soucis est la ponctuation, et là il s'agit du même soucis, l'intercorrélation ne parvient pas à faire la différence entre une virgule, un point et un point virgule.
 	Le dernier soucis qu'on peut remarquer est là non présence des numéros 4 et 5, alors que les précédents y sont. Cela viens du fait que les chiffres ne sont implémentés dans la base de donnée que de 0 à 3.
 	\subsection{Améliorations futures et suites du projet}	
-	Maintenant que notre script fonctionne bien, nous pouvons nous concentrer sur les petits détails. Dans un premier temps, inclure les 84 caractères et les classer dans le bon ordre dans la base de donnée tel qu'ils sont définis ci dessus. Cela permettra de "lire" tous les documents possibles. Dans un second temps, pour augmenter la performance du script, il faut trouver un système permettant de reconnaître les caractères accentués ainsi que tous les caractères de ponctuations.
+	Maintenant que notre script fonctionne bien, nous pouvons nous concentrer sur les petits détails. Dans un premier temps, inclure les 84 caractères et les classer dans le bon ordre dans la base de donnée tel qu'ils sont définis ci dessus, dans leur version capitale et minuscule. Cela permettra de "lire" tous les documents possibles. Dans un second temps, pour augmenter la performance du script, il faut trouver un système permettant de reconnaître les caractères accentués ainsi que tous les caractères de ponctuations. De plus, améliorer la détection du nombre de caractères pourra permettre d'augmenter la précision du script, en pouvant prendre en compte les titres et les différents paragraphes.
+	Une autre voie de poursuite du projet serait l'implémentation d'autres effets de police, comme l'italique, le gras ou le souligné.
+	On peut aussi essayer d'implémenter un redressement des images. En effet, lorsque l'on prend une photo le texte est rarement correctement aligné, il faut donc corriger un effet de cisaillement sur les images.\\
+	L'objectif final du projet pourrait être de partir d'une photo d'un polycopié, écrit avec la bonne police, pour arriver à un fichier texte contenant le texte du document.
 	\section{Conclusion}
+	Le script que nous avons développé permet aujourd'hui de récupérer le texte contenu dans une image, mais cette image doit répondre à des critères précis. Nous remplissons les objectifs définis au début de notre rapport. L'avenir de ce script sera de diminuer les critères pour que le script fonctionne. En implémentant d'autres outils de traitement du signal, on augmentera les performances du script.
 	
 \end{document}
