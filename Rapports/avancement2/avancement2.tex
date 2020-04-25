@@ -15,6 +15,8 @@
 \renewcommand{\thesubsection}{\arabic{section}.\arabic{subsection}}
 %\titleformat{\subsubsection}[runin]{\normalfont\bfseries}{\thesubsubsection}{0em}{}
 
+\setlength{\parskip}{0.5em}
+
 \title{Second Rapport d'Avancement Projet Signal\\Reconnaissance Optique de Caractères}
 \author{Tristan DRUSSEL - Florian POUTHIER \\ \\ Génie Électrique - 4ème année\\ INSA Strasbourg}
 \date{Année scolaire 2019-2020}
@@ -26,9 +28,25 @@
 	\tableofcontents
 	\newpage
 	\section{Introduction}
+	
+	\vspace{-0.5em}
+	
 		Dans le cadre du cours de signal dispensé au semestre 8 de la formation en Génie Électrique, nous devons réaliser un projet utilisant les compétences et connaissances acquises dans le cours mais aussi les approfondir dans le domaine qui concerne notre sujet.
-		Notre sujet est la \textit{Reconnaissance Optique de Caractères (ROC)}. Avec les méthodes et les outils de traitement du signal, nous allons pouvoir comparer des caractères et ainsi transformer une photo en un fichier texte numérique. Vous pouvez retrouver l'intégralité de nos codes sur notre dépôt \href{https://github.com/tristanplouz/ProjetSignal}{github ici}.
+		
+		Notre sujet est la \textit{Reconnaissance Optique de Caractères (ROC)}. Ce sujet a déjà été très largement étudié par le passé, et notamment dans de nombreuses thèses visant à développer des outils de conversion d'images vers des données textuelles interprétables ou accessibles informatiquement. La thèse \cite{extr} donne en particulier une bonne introduction aux objectifs premiers de la \textit{ROC} dans le cas de la reconnaissance sur documents scannés. La thèse \cite{mait} permet d'obtenir des informations très intéressantes sur les stratégies de numérisation dans des établissements d'archives comme par exemple la Bibliothèque nationale de France (BnF). D'autres thèses \cite{handrec, chanson} développent des stratégies de reconnaissance de caractères manuscrits dans le cadre de l'étude de textes anciens ou contemporains non informatisés.
+		
+		Il est indéniable que les domaines d'application des recherches orientées sur la \textit{ROC} sont multiples. Elle est tantôt utilisée dans la reconnaissance d'adresses sur courier postal \cite{ind-post}, tantôt dans la reconnaissance de caractères dans des vidéos \cite{arab-video}, tantôt encore dans la numérisation de textes religieux ou anciens consignés sur papier jusqu'à présent \cite{chanson}.
+		
+		La \textit{ROC} a également fait l'objet d'approches mathématiques approfondies, tout comme le montre la thèse \cite{line-seg} avec des algoritmes basés sur la segmentation en lignes de documents anciens. Une méthode par apprentissage probabiliste est également exposée dans la thèse \cite{proba}. La thèse \cite{isom} propose quant-à-elle des solutions à la détection d'isomorphismes de graphes en mettant en avant des opérateurs avancés pour l'optimisation des résultats de ces méthodes. Les thèses \cite{handrec, cnn} proposent finalement une utilisation des réseaux de neurones convolutionnels afin de résoudre les problématiques de détections textuelle et faciale.
+		
+		Nos ambitions vis-à-vis de cet état de l'art sont beaucoup plus modestes et se centreront notamment sur une compréhension et une mise en oeuvre des techniques primitives de \textit{ROC}. \hyperref[objectifs]{Nos objectifs} seront détaillés plus loin. De manière synthétique, nous nous baserons sur les méthodes et les outils de traitement du signal, en vue de pouvoir comparer des caractères et ainsi transformer une photo en un fichier texte numérique. Vous pouvez retrouver l'intégralité de nos codes sur notre dépôt \href{https://github.com/tristanplouz/ProjetSignal}{github ici}.
+		
+		\vspace{-1em}
+		
 		\subsection{Une image, un signal?}	
+		
+		\vspace{-0.5em}
+		
 		La première des choses à faire est de définir l'image. Une image en informatique est un tableau où l'image est découpée en petits carrés. Chaque case du tableau correspond à un petit carré de l'image et le contenu du tableau est la quantité de rouge, de vert et de bleu de chaque découpage. Plus il y a de découpage plus l'image est précise.
 		Afin que l'image devienne un objet mathématique nous pouvons la transformer en une matrice. Le tableau défini précédemment peut donc devenir la matrice suivante:
 		\begin{equation}
@@ -74,15 +92,28 @@
 		\end{itemize}		
 		La corrélation est un outil fonctionnant beaucoup mieux sur des signaux à valeurs moyennes nulles.
 		\subsection{Nos objectifs}
-		Avant de commencer le projet, nous avons défini des objectifs assez modestes que nous espérons atteindre. Nous souhaitons partir d'une image à fond uni de n'importe quelle taille contenant du texte dans une certaine police. Nous allons travailler avec la police \texttt{Bitstream Vera Sans Mono}. Il s'agit d'une police monospace, cela signifie que chaque caractère fait la même largeur.\\
-		\begin{center}
-			\includegraphics[scale=0.1]{../../Data/fullpage.png}
-			\includegraphics[scale=0.1]{../../Data/poesie.png}
-			\includegraphics[scale=0.1]{../../Data/lorem.png}
-		\end{center}
+		\label{objectifs}
+		Avant de commencer le projet, nous avons défini des objectifs assez modestes que nous espérons atteindre. Nous souhaitons partir d'une image à fond uni de n'importe quelle taille contenant du texte dans une certaine police. Nous allons travailler avec la police \texttt{Bitstream Vera Sans Mono}. Il s'agit d'une police monospace, cela signifie que chaque caractère fait la même largeur.
+		
+		\begin{figure}[h]
+			\begin{center}
+				\includegraphics[scale=0.15]{../../Data/poesie.png}
+			\end{center}
+			\begin{center}
+				\begin{tabular}{cc}
+					\includegraphics[scale=0.2]{../../Data/fullpage_2.png} &
+					\includegraphics[scale=0.2]{../../Data/lorem.png}
+				\end{tabular}
+			\end{center}
+			\vspace{-1.5em}
+			\caption{Différentes extraits de textes en police \texttt{Bitstream Vera Sans Mono}}
+		\end{figure}
 		
 Ainsi en partant de ces images, il faudra obtenir le texte contenu. Nous verrons les différentes étapes du traitement et nos résultats dans la suite de notre rapport.
+
+		\vspace{-1.5em}
 		\section{Solutions}
+		\vspace{-1em}
 		\subsection{Premier essai}
 		\paragraph*{Nous avons dans un premier temps essayé de travailler sur l'image entière, cette méthode est le contenu du premier rapport d'avancement et des paragraphes ci-dessous. Le second essai est disponible \hyperref[essai2]{page~\pageref*{essai2}}}
 				
@@ -97,6 +128,8 @@ Ainsi en partant de ces images, il faudra obtenir le texte contenu. Nous verrons
 		Avant de vouloir exploiter des images, nous devons tous d'abord les créer. Nous allons donc sur un logiciel de dessin numérique et nous créons deux images, un motif et une image contenant une ou plusieurs fois ce motif.
 			
 		Nous importons les images dans \octave et nous les convertissons en une matrice de matrice, puis nous récupérons ensuite l'image en niveau de gris. La dernière étape avant de pourvoir appliquer l'intercorrélation sur les images est la transformation des signaux en signaux à valeurs moyennes nulles. Nous enlevons alors la valeur moyenne de la matrice à chaque élément.
+		
+		\begin{figure}
 		\begin{center}
 		\begin{tabular}{cc}
 				\includegraphics[scale=0.15]{../illus/motifm0.png} & \includegraphics[scale=0.4]{../illus/motm0.png}\\
@@ -104,18 +137,25 @@ Ainsi en partant de ces images, il faudra obtenir le texte contenu. Nous verrons
 				avec valeur moyenne nulle & avec valeur moyenne nulle\\
 		\end{tabular}	
 		\end{center}
-		
+		\vspace{-1em}
+		\caption{Motif et image sur lesquels seront appliqués les calculs d'intercorrélation}
+		\end{figure}
+
 		\subsubsection{La recherche}
 		Maintenant que nos images sont prêtes on peut commencer à chercher le motif dans l'image. Pour cela nous allons utiliser l'intercorrélation. En calculant les coefficients de corrélation entre les deux images, on va pouvoir localiser où le motif original a été translaté horizontalement ou verticalement.
 		Sur \octave nous utilisons la fonction \texttt{normxcorr2} afin d'obtenir les coefficients de corrélation normalisés. Cette fonction renvoie une matrice, d'une taille supérieure à l'image, contenant les coefficients d'intercorrélation. Plus le coefficient est proche de 1, plus le motif est semblable à la partie de l'image analysée.
 		Nous pouvons représenter cette matrice sur un graphe et ainsi repérer les points de similitude.
 		
+		\begin{figure}[h]
 		\begin{center}
 			\begin{tabular}{cc}
 				\includegraphics[scale=0.19]{../illus/cor.png} & \includegraphics[scale=0.19]{../illus/cor1.png}\\
 				Représentation des coefficients en 3D  & Représentation des coefficients vue de dessous\\
 			\end{tabular}
 		\end{center}
+		\vspace{-1em}
+		\caption{Représentations graphiques des résultats d'intercorrélation}
+		\end{figure}
 		
 		Avec ces représentations, nous pouvons repérer les occurrences du motif dans l'image. Il faut maintenant récupérer les coordonnées des pics les plus hauts pour localiser le motif.
 		\subsubsection{L'affichage}
@@ -129,14 +169,17 @@ Ainsi en partant de ces images, il faudra obtenir le texte contenu. Nous verrons
 		Avec notre technique actuelle, plusieurs points se situent au dessus de notre seuil, c'est pour cela que plusieurs cercles sont tracés pour chaque caractère reconnu. Résoudre ce problème se résumerait à identifier les points proches pour les "rassembler" en une seul occurrence du caractère.
 	\subsection{Second essai}
 	\label{essai2}
-	Après avoir essayer de corriger les problèmes développé ci-dessus, nous avons décider d'effectuer des changements dans l’algorithme de fonctionnement de base de notre script. Au lieu de travailler sur toute l'image, on découpe l'image en tuile contenant chacune un caractère, ainsi on applique la corrélation entre le motif et la tuile pour déterminer le caractère contenu dans la tuile.
-
-	\begin{center}
-		\includegraphics[scale=0.4]{../illus/tuiles.png}\\
-		Découpage préalable de l'image en tuiles avant les calculs de corrélation
-	\end{center}
+	Après avoir essayé de corriger les problèmes développé ci-dessus, nous avons décidé d'effectuer des changements dans l’algorithme du fonctionnement de base de notre script. Au lieu de travailler sur toute l'image, on découpe l'image en tuiles contenant chacune un caractère, ainsi on applique la corrélation entre le motif et la tuile pour déterminer le caractère contenu dans la tuile.
 	
-	On se fait ensuite défiler nos motifs au dessus de chaque tuile pour trouver la meilleur correspondance.
+	\begin{figure}[h]
+		\begin{center}
+			\includegraphics[scale=0.4]{../illus/tuiles.png}
+		\end{center}
+		\vspace{-1em}
+		\caption{Découpage préalable de l'image en tuiles avant les calculs de corrélation}
+	\end{figure}
+
+	On fait ensuite défiler nos motifs au dessus de chaque tuile pour trouver la meilleure correspondance.
 	Le travail à effectuer se décompose en plusieurs étapes:
 		\begin{itemize}
 			\item[$\bullet$] charger et mettre en forme les images ;
@@ -144,64 +187,82 @@ Ainsi en partant de ces images, il faudra obtenir le texte contenu. Nous verrons
 			\item[$\bullet$] détecter le caractère présent
 		\end{itemize}
 	\subsubsection{L'image}
-	Pour ce second essai, nous avons gardé les mêmes sources d'images que lors du premier essais en les modifiant légèrement (changement de tailles et de couleurs). Nous appliquons ensuite le même protocole, \hyperref[image]{comme détaillé ici}, de mise en forme, passage en niveau de gris, retrait de la valeur moyenne, etc... 
+	Pour ce second essai, nous avons gardé les mêmes sources d'images que lors du premier essai en les modifiant légèrement (changement de tailles et de couleurs). Nous appliquons ensuite le même protocole, \hyperref[image]{comme détaillé ici}, de mise en forme, passage en niveau de gris, retrait de la valeur moyenne, etc... 
 	\subsubsection{Détermination de la taille des tuiles}
-	Plusieurs méthodes étaient possible pour déterminer la taille des tuiles, nous avons dans un premier temps utilisé la taille des motifs pour déterminer la taille des caractères sur l'image à décoder, cette méthode est très performante mais ne permet pas de gérer des caractères de taille différente, en effet les valeurs sont liées dans le processus. Nous nous sommes donc basé sur les espaces inter-caractères. En effet entre chaque caractère un petit espace est présent, la police étant une police monospace, la taille des caractères est identiques et ils sont donc tous alignés sur une "grille". Cette espace est détectable, en effet en faisant la moyenne des valeurs la colonne on peut identifier les écarts.
-	\begin{figure}
+	Plusieurs méthodes étaient possibles pour déterminer la taille des tuiles, nous avons dans un premier temps utilisé la taille des motifs pour déterminer la taille des caractères sur l'image à décoder, cette méthode est très performante mais ne permet pas de gérer des caractères de tailles différentes, en effet les valeurs sont liées dans le processus. Nous nous sommes donc basé sur les espaces inter-caractères. En effet entre chaque caractère une petite espace est présente, la police étant une police monospace, la taille des caractères est identique et ils sont donc tous alignés sur une "grille". Cette espace est détectable, en effet en faisant la moyenne des valeurs sur la colonne on peut identifier les écarts.
+	
+	\begin{figure}[h]
 		\begin{center}
 			\includegraphics[scale=0.4]{../illus/detectionSpace.png}
 		\end{center}
+		\vspace{-1em}
 		\caption{Identification graphique des écarts}
 	\end{figure}
 
-
-	Ainsi en comptant le nombre d'espaces détecter nous pouvons déterminer le nombre de caractères par ligne.
-	On effectue le même processus, en faisant la moyenne sur les lignes pour détecter le nombre de ligne.
-	Il faut ensuite faire attention aux faux écarts, induit par les point et accents sur les lignes et par les espaces sur les colonnes.
+	Ainsi en comptant le nombre d'espaces détectées nous pouvons déterminer le nombre de caractères par ligne.
+	On effectue le même processus, en faisant la moyenne sur les lignes pour détecter le nombre de lignes.
+	Il faut ensuite faire attention aux faux écarts, induits par les points et accents sur les lignes et par les espaces sur les colonnes.
 	Le système rencontre quelques soucis sur les espaces et les points sur les "i".
 	\subsubsection{Détermination du caractère}
-	Maintenant qu'on a isolé chaque caractère de l'image dans une tuile, on peut déterminer le caractère présent sur celle ci. En calculant l'intercorrélation de la tuile et de chaque lettre et en relevant le maximum, on peut déterminer le caractère en présence.\\
-	
-	\begin{figure}[h]
-		\begin{center}
-			\includegraphics[scale=0.25]{../illus/tuile.png}
-			\includegraphics[scale=0.25]{../illus/2ech.png}
-			\includegraphics[scale=0.25]{../illus/2cor.png}
-		\end{center}
-	\end{figure}
+	Maintenant qu'on a isolé chaque caractère de l'image dans une tuile, on peut déterminer le caractère présent sur celle-ci. En calculant l'intercorrélation de la tuile et de chaque lettre et en relevant le maximum, on peut déterminer le caractère en présence.
 
-	Les deux caractères ne sont pas identiques, le maximum est donc aux alentours de 0.4.
-	\\
+	La \textsc{Figure \ref{cor_dif}} montre le cas où les deux caractères ne sont pas identiques ; le maximum de corrélation est donc aux alentours de 0.4.
 	
-	\begin{figure}[h]
+	La \textsc{Figure \ref{cor_idt}} montre le cas où les deux caractères sont identiques ; le maximum de corrélation est donc aux alentours de 0.9.
+	
+	\newpage
+	
+	\begin{figure}[h!]
 		\begin{center}	
-			\includegraphics[scale=0.25]{../illus/tuilev.png}
-			\includegraphics[scale=0.25]{../illus/2echv.png}
-			\includegraphics[scale=0.25]{../illus/2corv.png}
+			\begin{tabular}{cc}
+			\includegraphics[scale=0.12]{../illus/tuilev.png} &
+			\includegraphics[scale=0.18]{../illus/2echv.png}	\\
+			Tuile retenue & Echantillon utilisé	\\	
+			\end{tabular}\\
+			\includegraphics[scale=0.22]{../illus/2corv.png}
 		\end{center}
+		\vspace{-2em}
+		\caption{Résultats d'un calcul de corrélation entre une tuile et un échantillon identiques}
+		\label{cor_idt}
 	\end{figure}
 
-	Les deux caractères sont identiques, le maximum est donc aux alentours de 0.9.
-	
+	\vspace{2.5em}
+
+	\begin{figure}[h!]
+		\begin{center}
+			\begin{tabular}{cc}
+			\includegraphics[scale=0.12]{../illus/tuile.png} &
+			\includegraphics[scale=0.18]{../illus/2ech.png} \\	
+			Tuile retenue & Echantillon utilisé		\\		
+			\end{tabular}\\
+			\includegraphics[scale=0.22]{../illus/2cor.png}
+		\end{center}
+		\vspace{-2em}
+		\caption{Résultats d'un calcul de corrélation entre une tuile et un échantillon différents}
+		\label{cor_dif}
+	\end{figure}
+
 	\subsubsection{Améliorations apportées au script de base}
-	Nous avons commencé par écrire le script réalisant les fonctions basiques, nous avons ensuite ajouter différentes fonctionnalités pour améliorer notre script.
+	\vspace{-1em}
+	Nous avons commencé par écrire le script réalisant les fonctions basiques, puis nous avons ensuite ajouté différentes fonctionnalités pour améliorer notre script.
+	\vspace{-1em}
 	\paragraph{Ajout d'autres caractères}
-	Nos premiers essais se contentait de la détection des lettres capitales, très petites portions des caractères fréquemment utilisé dans les textes. Nous avons donc augmenté la gamme de caractères disponible en ajoutant par exemple la ponctuation et les minuscules.	
+	Nos premiers essais se contentaient de la détection des lettres capitales, très petites portions des caractères fréquemment utilisés dans les textes. Nous avons donc augmenté la gamme de caractères disponibles en ajoutant notamment la ponctuation et les minuscules.	
 	\paragraph{Détection des marges} 
 	En effet, l'image n'est pas forcément uniquement du texte, qui commence dès la première colonne et se termine à la dernière et de même pour les lignes.
-	Nous allons donc prévoir le retrait des marges aux bords de l'image, pour cela nous cherchons les premières lignes et colonnes non vides, en extrayant l'image contenu entre la première et dernière ligne et la première et dernière colonne non vide. On détecte les lignes et les colonnes non vide en calculant la valeur moyenne de la colonne. Si la valeur moyenne de la colonne est différente de la précédente, on est donc sur la première colonne non vide. De même pour les colonnes et pour détecter les dernière on part de la fin et on recule.
+	Nous allons donc prévoir le retrait des marges aux bords de l'image, pour cela nous cherchons les premières lignes et colonnes non vides, en extrayant l'image contenue entre la première et dernière ligne et la première et dernière colonne non vide. On détecte les lignes et les colonnes non vides en calculant la valeur moyenne de la colonne. Si la valeur moyenne de la colonne est différente de la précédente, on est donc sur la première colonne non vide. De même pour les colonnes et pour détecter les dernières on part de la fin et on recule.
 	Cette méthode fonctionne car nos images sont à fond uni.
 	\paragraph{Taille des caractères}
-	Avec la méthode de comptage des caractères s'appuyant sur les espaces présents entre les caractères, nous déterminons un nombre de caractère, en divisant la taille de l'image par ce nombre de caractères ou de lignes, nous pouvons déterminer la "surface" d'un caractère. Nos caractères dans la base de donnée sont d'une très grande taille, comme cela, nous pouvons les redimensionner pour qu'ils correspondent à la taille des caractères de l'image à analyser.
+	Avec la méthode de comptage des caractères s'appuyant sur les espaces présents entre les caractères, nous déterminons un nombre de caractère, en divisant la taille de l'image par ce nombre de caractères ou de lignes, nous pouvons déterminer la "surface" d'un caractère. Nos caractères dans la base de données sont d'une très grande taille, comme cela, nous pouvons les redimensionner pour qu'ils correspondent à la taille des caractères de l'image à analyser.
 	\paragraph{Rapidité}
 	Une fois l'algorithme de détection de caractères suffisamment robuste sur plusieurs exemples d'images, nous avons réfléchi à de nouvelles stratégies afin d'améliorer le temps de détection sur une image complète.
-	En effet, le temps de calcul de la corrélation dépend uniquement de la taille des images, si elles sont plus petite (en nombre de pixel) le calcul se fera plus vite. Nous ne pouvons pas attendre une accélération à ce niveau là, nous avons donc agit sur d'autres points.
+	En effet, le temps de calcul de la corrélation dépend uniquement de la taille des images, si elles sont plus petites (en nombre de pixel) le calcul se fera plus vite. Nous ne pouvons pas attendre une accélération à ce niveau là, nous avons donc agit sur d'autres points.
 	\subparagraph{Arrêt de recherche corrélative sur prédiction de maximum}
 	\label{stop_cor}
-	Une des premières pistes d'amélioration du temps de détection est de prédire un maximum suite à un résultat de corrélation. Cette méthode est très facilement implémentable. Suite au calcul d'une corrélation, si le résultat de cette corrélation est supérieure à une certaine valeur seuil, alors on suppose qu'il n'y aura pas d'autres résultats de corrélation supérieurs à celui-ci. Cette structure réside en une instruction \texttt{if} testant la comparaison du résultat de corrélation avec une valeur seuil variant entre 0.8 et 0.9. Si la comparaison est validée, alors on exécute un \texttt{break} afin de sortir de la boucle de recherche corrélative. Cette solution à l'avantage d'accélérer la recherche en passant plus rapidement à l'analyse de la tuile suivante.
+	Une des premières pistes d'amélioration du temps de détection est de prédire un maximum suite à un résultat de corrélation. Cette méthode est très facilement implémentable. Suite au calcul d'une corrélation, si le résultat de cette corrélation est supérieur à une certaine valeur seuil, alors on suppose qu'il n'y aura pas d'autres résultats de corrélation supérieurs à celui-ci. Cette structure réside en une instruction \texttt{if} testant la comparaison du résultat de corrélation avec une valeur seuil variant entre 0.8 et 0.9. Si la comparaison est validée, alors on exécute un \texttt{break} afin de sortir de la boucle de recherche corrélative. Cette solution a l'avantage d'accélérer la recherche en passant plus rapidement à l'analyse de la tuile suivante.
 	
 	\subparagraph{Recherche corrélative suivant le rang des fréquences d’occurrences de caractères}	 
-	 Une autre piste de gain de temps a été de considérer l'aspect linguistique d’occurrences statistiques des caractères dans des textes de la langue française. Le but était alors de tester la corrélation sur chaque tuile en considérant successivement les caractères du plus au moins répandu dans la langue française plutôt que l'ordre alphabétique traditionnel. Pour ce faire, une courte recherche bibliographique nous a amené sur le site web de typographie \textit{bépo} qui propose un \href{http://bepo.fr/wiki/Fr%C3%A9quence_des_caract%C3%A8res}{\textcolor{blue}{classement des occurences de caractères}} basé sur le corpus Wikipedia français de 2008. La \textsc{Table \ref{freq_carac}} présente cette répartition des occurences. 
+	 Une autre piste de gain de temps a été de considérer l'aspect linguistique d’occurrences statistiques des caractères dans des textes de la langue française. Le but était alors de tester la corrélation sur chaque tuile en considérant successivement les caractères du plus au moins répandu dans la langue française plutôt que l'ordre alphabétique traditionnel. Pour ce faire, une courte recherche bibliographique nous a amené sur le site web de typographie \textit{Bépo} qui propose un \href{http://bepo.fr/wiki/Fr%C3%A9quence_des_caract%C3%A8res}{\textcolor{blue}{classement des occurences de caractères}} basé sur le corpus Wikipedia français de 2008. La \textsc{Table \ref{freq_carac}} présente cette répartition des occurences. 
 	 
 \newpage
 
@@ -384,8 +445,8 @@ Ainsi en partant de ces images, il faudra obtenir le texte contenu. Nous verrons
 84 & í &	 48 391 & 0,01 \\ 
 \hline
 \end{tabular}
-\label{freq_carac}
 \caption{Fréquences des caractères du corpus Wikipédia de 2008 (source \textit{Bépo})}
+\label{freq_carac}
 \end{table}	
 
 \newpage
@@ -395,12 +456,12 @@ L'aspect intéressant de ce classement est notamment d'inclure les caractères s
 Afin d'implémenter l'utilisation d'un tel classement, nous avons renommé les échantillons de caractères utilisés pour les calculs de corrélation. Pour ce faire nous avons ajouté au nom de chaque échantillon la numérotation du rang qui lui correspond dans la \textsc{Table \ref{freq_carac}}, ce qui permet notamment aux caractères d'être placés dans cet ordre dans le tableau de cellules \texttt{alpha}. Ils seront donc utilisés dans ce même ordre lors du parcours par index croissant dans les boucles de recherches corrélatives.
 
 \subparagraph{Détection des tuiles vides}
-Un autre poste de perte de temps était la détection des espaces, en effet aucun caractère ne ressemble à un espace donc il parcourait toute notre base de caractère afin de ne rien trouver. Pour prévenir la recherche inutile, nous observons la tuile, si celle ci est monochrome, on considère que c'est un espace. Ce calcul est beaucoup plus rapide que faire l'intercorrélation de chaque caractère. Pour cela nous comparons la valeur moyenne et la valeur minimum, plus celles-ci sont proches plus la tuile est vide et donc c'est un espace.
+Un autre poste de perte de temps était la détection des espaces, en effet aucun caractère ne ressemble à une espace donc il parcourait toute notre base de caractèree afin de ne rien trouver. Pour prévenir la recherche inutile, nous observons la tuile, si celle ci est monochrome, on considère que c'est une espace. Ce calcul est beaucoup plus rapide que faire l'intercorrélation de chaque caractère. Pour cela nous comparons la valeur moyenne et la valeur minimum, plus celles-ci sont proches plus la tuile est vide et donc c'est une espace.
 
 \paragraph{Ajout d'interfaces avec l'utilisateur}
-	Les premiers tests avec l'adresse de l'image implémenté "en dur" dans le code sont pratiques mais dès que l'on travaille avec plusieurs images, cela devient embêtant de changer le code à chaque fois. Nous avons donc mis une entrée utilisateur pour sélectionner le fichier à analyser.
-	Nous avons aussi rajouter des questions pour le bon et rapide fonctionnement du script, comme la gamme de couleur de l'image (Fond foncé ou fond clair) et si le texte ne contient que des majuscules, en effet si c'est le cas, pas besoin de charger et de tester toutes les minuscules.
-	Nous avons aussi rajouter une interface utilisateur pour l'informer. Nous avons donc des informations progressivement sur l'avancement du traitement et le temps estimé. Nous avons au final un message résumant toutes les informations:\\
+	Les premiers tests avec l'adresse de l'image implémentée "en dur" dans le code sont pratiques mais dès que l'on travaille avec plusieurs images, cela devient embêtant de changer le code à chaque fois. Nous avons donc mis une entrée utilisateur pour sélectionner le fichier à analyser.
+	Nous avons aussi rajouter des questions pour le bon et rapide fonctionnement du script, comme la gamme de couleur de l'image (fond foncé ou fond clair) et si le texte ne contient que des majuscules, en effet si c'est le cas, pas besoin de charger et de tester toutes les minuscules.
+	Nous avons aussi rajouté une interface utilisateur pour l'informer. Nous avons donc des informations progressivement sur l'avancement du traitement et le temps estimé. Nous avons au final un message résumant toutes les informations:\\
 	\texttt{
 	Adresse du fichier(Laisser vide pour default)Data/lorem.png\\
 Le texte foncé sur fond clair?(yes or no) no\\
@@ -436,26 +497,70 @@ ENIM RHONCUS.PROIN ID PEL\\
 LENTESOUE NUNC. PELLENTES\\
 OUE EU RUTRUM EX.\\}
 
+	\vspace{-2em}
 	\subsection{Résultat Final}
-	Une fois que toutes les améliorations ont été implémenté on peut lancer un test massif sur les performances de notre script.
-	Pour cela, nous avons créer une image finale:\\
-	\includegraphics[scale=0.25]{../../Data/DUDH.png}
+	Une fois que toutes les améliorations ont été implémentées on peut lancer un test massif sur les performances de notre script.
+	Pour cela, nous avons créé une image finale représentée en \textsc{Figure \ref{DUDH}}.
+	
+	\begin{figure}[h]
+		\begin{center}
+			\includegraphics[scale=0.45]{../../Data/DUDH.png}
+		\end{center}
+		\vspace{-4em}
+		\caption{Création d'une image de validation finale basée sur la \textit{Déclaration des Droits de l'Homme}}
+		\label{DUDH}
+	\end{figure}
+	
 	Nous exécutons ensuite le script.
-	Dans un premier temps, nous obtenons le découpage en tuile suivant:\\
-	\includegraphics[scale=0.25]{../illus/tuilesDUDH.png}
+	Dans un premier temps, nous obtenons le découpage en tuiles exposé en \textsc{Figure \ref{tuilesDUDH}}.
+	
 	Chaque caractère est sur une tuile, on peut donc appliquer l'intercorrelation et trouver chaque caractère.
-	Au bout de 11min40s, nous obtenons le résultat suivant:
-	\includegraphics[scale=0.25]{../illus/diffDUDH.png}
-	Nous pouvons voir sur cette capture du logiciel Meld, permettant de réaliser la comparaison de fichier, que le résultat est totalement satisfaisant, il persiste des erreurs que nous allons maintenant détailler.
-	Dans un premier temps, nous pouvons relever que l'accentuation n'est pas retransmise. Il s'agit là d'un soucis de détection sur le seuil et l'intercorrélation. En effet, les caractères accentués sont des voyelles très présente dans la langue française, mais le "e" est détecté avant de détecter un "e" accentué. L'autre soucis est que l'accent est en bord de tuiles, ce qui le rend moins facilement détectable, et le max de l'image s'effectuera donc plus sur la lettre que sur l'accent.
-	Le second soucis est la ponctuation, et là il s'agit du même soucis, l'intercorrélation ne parvient pas à faire la différence entre une virgule, un point et un point virgule.
-	Le dernier soucis qu'on peut remarquer est là non présence des numéros 4 et 5, alors que les précédents y sont. Cela viens du fait que les chiffres ne sont implémentés dans la base de donnée que de 0 à 3.
+	Au bout de 11min40s, nous obtenons le résultat montré en \textsc{Figure \ref{diffDUDH}}.
+	
+	\begin{figure}[ht!]
+		\begin{center}
+			\includegraphics[scale=0.42]{../illus/tuilesDUDH.png}
+		\end{center}
+		\vspace{-4em}
+		\caption{Découpage en tuiles de l'image précédemment créée}
+		\label{tuilesDUDH}
+	\end{figure}
+	
+	\vspace{4em}
+	
+	\begin{figure}[h!]
+		\begin{center}
+			\includegraphics[scale=0.42]{../illus/diffDUDH.png}
+		\end{center}
+		\vspace{-1em}
+		\caption{Comparaison du texte original avec la sortie du script \octave exécuté sur l'image créée}
+		\label{diffDUDH}
+	\end{figure}
+	
+	Nous pouvons voir sur la capture du logiciel \textit{Meld} (\textsc{Figure \ref{diffDUDH}}), permettant de réaliser la comparaison de fichiers, que le résultat est totalement satisfaisant, il persiste des erreurs que nous allons maintenant détailler.
+	
+	\begin{itemize}
+		\item[$\bullet$] Dans un premier temps, nous pouvons relever que l'accentuation n'est pas retransmise. Il s'agit là d'un soucis de détection sur le seuil et l'intercorrélation. En effet, les caractères accentués sont des voyelles très présentes dans la langue française, mais le "e" est détecté avant de détecter un "e" accentué. L'autre soucis est que l'accent est en bord de tuiles, ce qui le rend moins facilement détectable, et le maximum de l'image s'effectuera donc plus sur la lettre que sur l'accent.
+		\item[$\bullet$] Le second soucis est la ponctuation, et là il s'agit du même soucis, l'intercorrélation ne parvient pas à faire la différence entre une virgule, un point et un point virgule.
+		\item[$\bullet$] Le dernier soucis qu'on peut remarquer est la non présence des numéros 4 et 5, alors que les précédents y sont. Cela vient du fait que les chiffres ne sont implémentés dans la base de données que de 0 à 3.
+	\end{itemize}
+	
 	\subsection{Améliorations futures et suites du projet}	
-	Maintenant que notre script fonctionne bien, nous pouvons nous concentrer sur les petits détails. Dans un premier temps, inclure les 84 caractères et les classer dans le bon ordre dans la base de donnée tel qu'ils sont définis ci dessus, dans leur version capitale et minuscule. Cela permettra de "lire" tous les documents possibles. Dans un second temps, pour augmenter la performance du script, il faut trouver un système permettant de reconnaître les caractères accentués ainsi que tous les caractères de ponctuations. De plus, améliorer la détection du nombre de caractères pourra permettre d'augmenter la précision du script, en pouvant prendre en compte les titres et les différents paragraphes.
+	Maintenant que notre script fonctionne bien, nous pouvons nous concentrer sur les petits détails. Dans un premier temps, inclure les 84 caractères et les classer dans le bon ordre dans la base de données tels qu'ils sont définis ci-dessus, dans leurs versions capitale et minuscule. Cela permettra de "lire" tous les documents possibles. Dans un second temps, pour augmenter la performance du script, il faut trouver un système permettant de reconnaître les caractères accentués ainsi que tous les caractères de ponctuations. De plus, améliorer la détection du nombre de caractères pourra permettre d'augmenter la précision du script, en pouvant prendre en compte les titres et les différents paragraphes.
+	
 	Une autre voie de poursuite du projet serait l'implémentation d'autres effets de police, comme l'italique, le gras ou le souligné.
-	On peut aussi essayer d'implémenter un redressement des images. En effet, lorsque l'on prend une photo le texte est rarement correctement aligné, il faut donc corriger un effet de cisaillement sur les images.\\
+	
+	On peut aussi essayer d'implémenter un redressement des images. En effet, lorsque l'on prend une photo le texte est rarement correctement aligné, il faut donc corriger un effet de cisaillement sur les images.
+	
 	L'objectif final du projet pourrait être de partir d'une photo d'un polycopié, écrit avec la bonne police, pour arriver à un fichier texte contenant le texte du document.
 	\section{Conclusion}
 	Le script que nous avons développé permet aujourd'hui de récupérer le texte contenu dans une image, mais cette image doit répondre à des critères précis. Nous remplissons les objectifs définis au début de notre rapport. L'avenir de ce script sera de diminuer les critères pour que le script fonctionne. En implémentant d'autres outils de traitement du signal, on augmentera les performances du script.
+	
+	\listoffigures
+	
+	\listoftables
+	
+	\bibliographystyle{plain} 
+	\bibliography{biblio}
 	
 \end{document}
