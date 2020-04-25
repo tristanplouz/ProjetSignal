@@ -121,7 +121,12 @@
 	\subsection{Second essai}
 	\label{essai2}
 	Après avoir essayer de corriger les problèmes développé ci-dessus, nous avons décider d'effectuer des changements dans l’algorithme de fonctionnement de base de notre script. Au lieu de travailler sur toute l'image, on découpe l'image en tuile contenant chacune un caractère, ainsi on applique la corrélation entre le motif et la tuile pour déterminer le caractère contenu dans la tuile.
-	\includegraphics[scale=0.5]{../illus/tuiles.png}
+
+	\begin{center}
+		\includegraphics[scale=0.4]{../illus/tuiles.png}\\
+		Découpage préalable de l'image en tuiles avant les calculs de corrélation
+	\end{center}
+	
 	On se fait ensuite défiler nos motifs au dessus de chaque tuile pour trouver la meilleur correspondance.
 	Le travail à effectuer se décompose en plusieurs étapes:
 		\begin{itemize}
@@ -133,21 +138,40 @@
 	Pour ce second essai, nous avons gardé les mêmes sources d'images que lors du premier essais en les modifiant légèrement (changement de tailles et de couleurs). Nous appliquons ensuite le même protocole, \hyperref[image]{comme détaillé ici}, de mise en forme, passage en niveau de gris, retrait de la valeur moyenne, etc... 
 	\subsubsection{Détermination de la taille des tuiles}
 	Plusieurs méthodes étaient possible pour déterminer la taille des tuiles, nous avons dans un premier temps utilisé la taille des motifs pour déterminer la taille des caractères sur l'image à décoder, cette méthode est très performante mais ne permet pas de gérer des caractères de taille différente, en effet les valeurs sont liées dans le processus. Nous nous sommes donc basé sur les espaces inter-caractères. En effet entre chaque caractère un petit espace est présent, la police étant une police monospace, la taille des caractères est identiques et ils sont donc tous alignés sur une "grille". Cette espace est détectable, en effet en faisant la moyenne des valeurs la colonne on peut identifier les écarts.
-	\includegraphics[scale=0.5]{../illus/detectionSpace.png}
+	\begin{figure}
+		\begin{center}
+			\includegraphics[scale=0.4]{../illus/detectionSpace.png}
+		\end{center}
+		\caption{Identification graphique des écarts}
+	\end{figure}
+
+
 	Ainsi en comptant le nombre d'espaces détecter nous pouvons déterminer le nombre de caractères par ligne.
 	On effectue le même processus, en faisant la moyenne sur les lignes pour détecter le nombre de ligne.
 	Il faut ensuite faire attention aux faux écarts, induit par les point et accents sur les lignes et par les espaces sur les colonnes.
 	Le système rencontre quelques soucis sur les espaces et les points sur les "i".
 	\subsubsection{Détermination du caractère}
 	Maintenant qu'on a isolé chaque caractère de l'image dans une tuile, on peut déterminer le caractère présent sur celle ci. En calculant l'intercorrélation de la tuile et de chaque lettre et en relevant le maximum, on peut déterminer le caractère en présence.\\
-	\includegraphics[scale=0.25]{../illus/tuile.png}
-	\includegraphics[scale=0.25]{../illus/2ech.png}
-	\includegraphics[scale=0.25]{../illus/2cor.png}
+	
+	\begin{figure}[h]
+		\begin{center}
+			\includegraphics[scale=0.25]{../illus/tuile.png}
+			\includegraphics[scale=0.25]{../illus/2ech.png}
+			\includegraphics[scale=0.25]{../illus/2cor.png}
+		\end{center}
+	\end{figure}
+
 	Les deux caractères ne sont pas identiques, le maximum est donc aux alentours de 0.4.
 	\\
-	\includegraphics[scale=0.25]{../illus/tuilev.png}
-	\includegraphics[scale=0.25]{../illus/2echv.png}
-	\includegraphics[scale=0.25]{../illus/2corv.png}
+	
+	\begin{figure}[h]
+		\begin{center}	
+			\includegraphics[scale=0.25]{../illus/tuilev.png}
+			\includegraphics[scale=0.25]{../illus/2echv.png}
+			\includegraphics[scale=0.25]{../illus/2corv.png}
+		\end{center}
+	\end{figure}
+
 	Les deux caractères sont identiques, le maximum est donc aux alentours de 0.9.
 	
 	\subsubsection{Améliorations apportées au script de base}
