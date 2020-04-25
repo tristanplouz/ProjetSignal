@@ -19,7 +19,7 @@ Il faut un fond uni mais les caractères peuvent être multicolor.
 La détermination du nombre de caractères lorsque l'image ne contient qu'une seul ligne de texte ou des espaces alignés verticalement pose problème, c'est donc à éviter.
 
 ## Exécution
-`octave main.m`
-Il est ensuite demandé l'adresse de l'image (des exemples sont disponibles dans _Data/_
+Il faut lancer `octave main.m`.
+Il est ensuite demandé l'adresse de l'image (des exemples sont disponibles dans _Data/_)
 Si l'image est un positif ou en négatif (fond foncé/écriture claire ou l'inverse)
 Si le texte ne contient que des majuscules afin de gagner du temps de processus
