@@ -149,17 +149,17 @@ dx_search = length(mot(1,:))/(nb_carac_line);
 dy_search = length(mot(:,1))/nb_carac_col; 
 
 %Affichage du découpage en tuile
-figure(1)
-hold on;
-imshow(mot)
+##figure(1)
+##hold on;
+##imshow(mot)
 ##imshow(b)
-for i=0:nb_carac_line-1
-  for k=0:nb_carac_col-1
-    drawRect([i*dx_search-3 k*dy_search-3  dx_search+3 dy_search+3]);
-  endfor
-endfor
-hold off
-saveas(figure(1),"Rapports/illus/tuilesDUDH.png");
+##for i=0:nb_carac_line-1
+##  for k=0:nb_carac_col-1
+##    drawRect([i*dx_search-3 k*dy_search-3  dx_search+3 dy_search+3]);
+##  endfor
+##endfor
+##hold off
+##saveas(figure(1),"Rapports/illus/tuilesDUDH.png");
 
 data=glob("alphabet/*.png");%Import des adresses de motif de l'alphabet 
 rep=yes_or_no("Le texte contient uniquement des majuscules?"); 
