@@ -1,0 +1,70 @@
+\begin{thebibliography}{10}
+
+\bibitem{proba}
+Laurent Boyer.
+\newblock Apprentissage probabiliste de similarités d’édition.
+\newblock Autre [cs.oh], Université Jean Monnet - Saint-Etienne, 2011.
+\newblock tel-00718835.
+
+\bibitem{isom}
+Thomas Bärecke.
+\newblock Isomorphisme inexact de graphes par optimisation Évolutionnaire.
+\newblock Informatique[cs], Université Pierre et Marie Curie - Paris VI, 2009.
+\newblock tel-00494519.
+
+\bibitem{chanson}
+Jean-Baptiste Camps.
+\newblock La chanson d’otinel : édition complète du corpus manuscrit et
+  prolégomènes à l’édition critique.
+\newblock Littératures, Université Paris-Sorbonne - Paris IV, 2016.
+\newblock tel-01664932.
+
+\bibitem{line-seg}
+Nazih Ouwayed.
+\newblock Segmentation en lignes de documents anciens : applications aux
+  documents arabes.
+\newblock Autre [cs.oh], Université Nancy 2, 2010.
+\newblock tel-01752983.
+
+\bibitem{cnn}
+Clément Peyrard.
+\newblock Single image super-resolution based on neural networks for text and
+  face recognition.
+\newblock Image processing [eess.iv], Université de Lyon, 2017.
+\newblock tel-01974040.
+
+\bibitem{mait}
+Ahmed~Ben Salah.
+\newblock Maîtrise de la qualité des transcriptions numériques dans les
+  projets de numérisation de masse.
+\newblock Traitement des images [eess.iv], Université de Rouen, 2014.
+\newblock tel-01164698.
+
+\bibitem{extr}
+Mahmoud Soua.
+\newblock Extraction hybride et description structurelle de caractères pour
+  une reconnaissance efficace de texte dans les documents hétérogènes
+  scannés: Méthodes et algorithmes parallèles.
+\newblock Informatique et langage [cs.cl], Université Paris-Est, 2016.
+\newblock tel-01548457.
+
+\bibitem{handrec}
+Wassim Swaileh.
+\newblock Language modelling for handwriting recognition.
+\newblock Modeling and simulation, Normandie Université, 2017.
+\newblock tel-01781268.
+
+\bibitem{ind-post}
+Szilárd Vajda.
+\newblock Cursive bengali script recognition for indian postal automation.
+\newblock Engineering sciences [physics], Université Henri Poincaré - Nancy
+  1, 2008.
+\newblock tel-01748429v2.
+
+\bibitem{arab-video}
+Sonia Yousfi.
+\newblock Embedded arabic text detection and recognition in video.
+\newblock Document and text processing, Université de Lyon, 2016.
+\newblock tel-01406716v2.
+
+\end{thebibliography}
