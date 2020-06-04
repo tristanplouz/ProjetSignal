@@ -55,11 +55,7 @@ function res=withoutMargin(file)
       break
     endif
   endfor
-  try
-    res=file(3-ymin:ymax+3,3-xmin:xmax+3);
-  catch
-    res=file(ymin:ymax,xmin:xmax);
-  end_try_catch
+  res=[ymin,ymax,xmin,xmax];
 endfunction
 %Compte le nombre de caractères d'une ligne
 function [res,B]=countCaracLine(mot)  
@@ -110,6 +106,31 @@ function [res,C]=countLine(mot)
   endfor
   res=a+1;
 endfunction
+
+function res=detectBgColor(file)
+  color{1}{1}=[0,0,0];
+  color{1}{2}=0;
+  for i=1:4:length(file(:,1,1))-1
+    for j=1:4:length(file(1,:,1))-1
+      ctmp=[file(i,j,1),file(i,j,2),file(i,j,3)];
+      p=0;
+      for a=1:length(color)
+        if color{a}{1} == ctmp
+          color{a}{2}++;
+          p=1;
+          break;
+        else
+          p=0;
+        endif
+      endfor
+      if p==0
+        color{end+1}{1}=ctmp;
+        color{end}{2}=1;
+      endif
+    endfor
+  endfor
+  res=color;
+endfunction
 %Interface utilisateur Chargement fichier
 while (1)
   fileAdr=input("Adresse du fichier(Laisser vide pour default)","s");
@@ -126,15 +147,18 @@ while (1)
   endif
 endwhile
 
-
-rep=yes_or_no("Le texte foncé sur fond clair?"); %Demande de la gamme de couleur pour adaptation
-if rep 
+if yes_or_no("Le texte foncé sur fond clair?"); %Demande de la gamme de couleur pour adaptation 
   file=255-file; %On veut toutes les images en fond foncé et écriture claire
 endif
 
-file=picPrep(file);%Prépare le fichier
-mot=withoutMargin(file);%Retire les marges
 
+fileG=picPrep(file);%Prépare le fichier
+coor=withoutMargin(fileG);%Retire les marges
+try
+  mot=fileG(3-coor(1):coor(2)+3,3-coor(3):coor(4)+3);
+catch
+  mot=fileG(coor(1):coor(2),coor(3):coor(4));
+end_try_catch
 %figure(1) 
 %imshow(mot) 
 
@@ -162,10 +186,25 @@ dy_search = length(mot(:,1))/nb_carac_col;
 ##saveas(figure(1),"Rapports/illus/tuilesDUDH.png");
 
 data=glob("alphabet/*.png");%Import des adresses de motif de l'alphabet 
-rep=yes_or_no("Le texte contient uniquement des majuscules?"); 
-if rep 
+if rep=yes_or_no("Le texte contient uniquement des majuscules?");  
   data=data(46:end); %On importe que les majuscules et la ponctuation
 endif
+
+hypert=false;
+
+if rep=yes_or_no("Sortie fichier HTML (Si non, sortie console)?");  
+ hypert=true;
+ color=detectBgColor(file);
+ colormax=[0,0];
+  for i=1:length(color)
+    if color{i}{2}>colormax(1)
+      colormax(1)=color{i}{2};
+      colormax(2)=i;
+    endif
+  endfor
+  colorBG=color{colormax(2)}{1};
+ endif
+
 
 sec=sec0=time(); %init du chronomètre
 disp("Chargement des éléments...")
@@ -180,9 +219,7 @@ for k=1:length(data)
   alpha{end+1}={picPrep(B),strsplit(strsplit(data{k},"_"){2},"."){1}};
 endfor
 scam/=k;
-clear B
-clear file
-
+clear B 
 %Information Utilisateur
 disp("Éléments chargés en ")
 disp(strcat(num2str(time()-sec),"s"))
@@ -225,7 +262,42 @@ for j=1:nb_carac_col %Pour chaque ligne
     endif 
 
     tile = mot(ymin:ymax,xmin:xmax);%Création de la tuile
-
+    if hypert
+      tilec=file(coor(1)+ymin:ymax,coor(3)+xmin:xmax,:);
+      colorT{1}{1}=[0,0,0];
+      colorT{1}{2}=0;
+      for i=1:length(tilec(:,1,1))-1
+        for j=1:length(tilec(1,:,1))-1
+          ctmp=[tilec(i,j,1),tilec(i,j,2),tilec(i,j,3)];
+          p=0;
+          for a=1:length(colorT)
+            if colorT{a}{1} == ctmp
+              colorT{a}{2}++;
+              p=1;
+              break;
+            else
+              p=0;
+            endif
+          endfor
+          if p==0
+            colorT{end+1}{1}=ctmp;
+            colorT{end}{2}=1;
+          endif
+        endfor
+      endfor
+      colormax=[0,0]
+      for i=1:length(colorT)
+        if colorT{i}{2}>colormax(1)
+          if colorT{i}{1}==colorBG
+            colormax(1);
+          else
+            colormax(1)=color{i}{2};
+            colormax(2)=i;
+          endif
+        endif
+      endfor
+      colorL=colorT{colormax(2)}{1};
+    endif
     for k=1:length(data) 
 %Chargement des motifs 
       ech=cell2mat(alpha{k}(1));
@@ -299,15 +371,37 @@ for j=1:nb_carac_col %Pour chaque ligne
       endif 
       
     endfor 
+    if hypert
+      predict=cstrcat("<span style='color:rgb(",num2str(colorL(1)),",",num2str(colorL(2)),",",num2str(colorL(3)),");'>",predict,"</span>");
+      mot_pred = cstrcat(mot_pred, predict);
+    else
     mot_pred = cstrcat(mot_pred, predict); 
+    endif
     %info utilisateur
     disp(cstrcat("Caractère : ",num2str(state)," sur ",num2str(tot) ," en ",num2str(time()-sec),"s (eta ",num2str((tot-state)*(time()-sec0)/state),"s)")) 
     state++; 
     sec=time(); 
   endfor 
-  mot_pred = cstrcat(mot_pred, "\n"); 
+  if hypert
+      mot_pred = cstrcat(mot_pred, "<br>"); 
+    else
+    mot_pred = cstrcat(mot_pred, "\n"); 
+    endif
+  
 endfor 
 
-%Info utilisateur
-disp(cstrcat("Texte extrait de ",fileAdr," en ",num2str(time()-sec0),":\n",mot_pred))
-save "output.txt" mot_pred
+if hypert
+  disp("Texte décodé et sauvegardé dans output.html")
+  
+  save_header_format_string(" ")
+  page=cstrcat("<!DOCTYPE html><html><header><title>Texte créé par le script de décodage d'image</title><style>body{color:white;background:rgb(",num2str(colorBG(1)),",",num2str(colorBG(2)),",",num2str(colorBG(3)),");}</style></header><body>",mot_pred,"</body></html>");
+  %save "output.html" page
+  fid=fopen ("output.html", "w");
+  fputs(fid,page);
+else
+  %Info utilisateur
+  disp(cstrcat("Texte extrait de ",fileAdr," en ",num2str(time()-sec0),":\n",mot_pred))
+endif
+
+
+
