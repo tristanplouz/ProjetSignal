@@ -275,8 +275,8 @@ for j=1:nb_carac_col %Pour chaque ligne
     tile = mot(ymin:ymax,xmin:xmax);%Création de la tuile
     if hypert
       tilec=file(coor(1)+ymin:coor(1)+ymax,coor(3)+xmin:coor(3)+xmax,:);
-      figure(4)
-      imshow(tilec)
+##      figure(4)
+##      imshow(tilec)
       clear colorT
       colorT{1}{1}=colorBG;
       colorT{1}{2}=0;
@@ -314,8 +314,12 @@ for j=1:nb_carac_col %Pour chaque ligne
     endif
     rapT=colorT{colormax(2)}{2}/colorT{1}{2};
     clear kech
+    
+    
+    %1,47 47 end
+    mean(mean(tile(1:dy_search/10,:)))
     for k=1:length(alpha) 
-%Chargement des motifs 
+      %Chargement des motifs 
       ech=cell2mat(alpha{k}(1));
       if alrChk == false
         if checkEmptyTile(tile) %Si la tuile est vide on défini un espace et on break
@@ -329,8 +333,8 @@ for j=1:nb_carac_col %Pour chaque ligne
 ##      figure(2); 
 ##      imshow(ech); 
 %Display tuile 
-      figure(3);  
-      imshow(tile);
+##      figure(3);  
+##      imshow(tile);
       
 %Intercorrelation  
       d=normxcorr2(ech,tile);  
@@ -448,5 +452,5 @@ else
   disp(cstrcat("Texte extrait de ",fileAdr," en ",num2str(time()-sec0),":\n",mot_pred))
 endif
 
-
+%Ait(end-i,:)=[Ait(end-i,1+round(i*71/320):end) Ait(end-i,1:round(i*71/320))];
 
