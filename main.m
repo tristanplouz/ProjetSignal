@@ -327,7 +327,7 @@ for j=1:nb_carac_col %Pour chaque ligne
      [c,d]=max(mt);
      vIt=(d-a)/c
      it=false;
-     if ((vIt>38 &&vIt<130) ||(vIt>150 &&vIt<280) ||(vIt>720 && vIt<1000))
+     if ((vIt>38 &&vIt<130) ||(vIt>188 &&vIt<280) ||(vIt>720 && vIt<830))
        for h=1:length(tile)-1
         tile(end-h,:)=[tile(end-h,1+round(h*length(tile(1,:))/(length(tile)*4.1)):end) tile(end-h,1:round(h*length(tile(1,:))/(length(tile)*4.1)))];
         it=true;
@@ -503,7 +503,7 @@ endfor
 if hypert
   
 
-  page=cstrcat("<!DOCTYPE html><html><header><title>Texte créé par le script de décodage d'image</title><style>body{font-size:",num2str(dx_search*0.75),"px;color:white;background:rgb(",num2str(colorBG(1)),",",num2str(colorBG(2)),",",num2str(colorBG(3)),");}</style></header><body>",mot_pred,"</body></html>");
+  page=cstrcat("<!DOCTYPE html><html><head><title>Texte créé par le script de décodage d'image</title><style>body{font-size:",num2str(dx_search*0.75),"px;color:white;background:rgb(",num2str(colorBG(1)),",",num2str(colorBG(2)),",",num2str(colorBG(3)),");}</style></head><body>",mot_pred,"</body></html>");
  
   fid=fopen ("output.html", "w");
   fputs(fid,page);

@@ -46,13 +46,13 @@
 	\tableofcontents
 	\newpage
 	\section{Introduction}
-	Le présent rapport ne comprend que les éléments du livrable supplémentaire. Les principales fonctionnalités sont présentées dans le rapport d'avancement 2. \\
+	Le présent rapport ne comprend que les éléments du livrable supplémentaire. Les principales fonctionnalités sont présentées dans le rapport d'avancement 2. Les précédents codes, sources et rapports sont disponible sur le dépôt Git du projet : \url{https://github.com/tristanplouz/ProjetSignal} \\
 	Le livrable supplémentaire que nous avons décidé d'implémenter est la reconnaissance des couleurs et des styles. En effet reconnaitre du texte de toutes les couleurs mais ne pas pouvoir le retransmettre en couleur et avec des effets, c'est un peu triste, tout comme un ciel gris strasbourgeois ou un monde sans aucune couleur.
 	Nous allons dans un premier temps parler de comment retransmettre un document en couleur et dans un second temps nous verrons comment détecter les styles et les couleurs.
 	\section{Retransmission}
 	Dans la partie suivante, nous allons parler de comment détecter les éléments hypertextuels, mais dans cette partie nous allons parler de comment les retransmettre.\\
-	Nous avons besoin d'un format qui soit accessible et reproductible facilement. Lorsque l'on pense à des éléments colorés et stylisés, on pense premièrement à une image. Mais détecter du texte dans une image pur ensuite reproduire une image est un travail assez contre productif. Dans un second temps, nous pouvons penser à un fichier PDF contenant le texte stylisé. Cette technique n'est malheureusement pas simple à réaliser en ayant un PDF avec le texte accessible. La création d'un document PDF peut s'effectuer avec un traitement de texte, créer un fichier \texttt{.odt} n'est pas non plus simple. Nous pouvons penser à un compilateur \LaTeX{} mais encore une fois c'est un énorme outil pour une petite tache. Pour stocker du texte, on pense au format textuel comme le \texttt{.txt} ou le \texttt{Markdown} malheureusement c'est format ne prennent pas en compte les effets stylistique. Nous avons besoin d'un outil entre le simple fichier texte et le document de traitement texte au niveau de la complexité. Deux éléments peuvent alors apparaitre la syntaxe Wiki, cela permet de créer de gros document avec une structure et de la mise en forme, l'inconvénient est qu'il faut un interpréteur Wiki. On peut finalement arriver au \texttt{HTML}, ce langage de description textuel, permet de restituer des éléments textuels stylisés. De plus il est facilement interprétable, il suffit d'un simple navigateur. Couplé au \texttt{CSS}, il permet de réaliser tous les effets hypertextuels que nous souhaitons.
-	\paragraph{HTML et CSS} Le \texttt{HTML} (Hyper Text Markup Language) et le \texttt{CSS} (Cascading Style Sheets) sont des langages de balisages et de mise en forme principalement utilisé sur l'internet. Le \texttt{HTML}, créé dans les années 1990, est un des premiers pas du Web tel qu'on le connais aujourd'hui. Le \texttt{CSS} se démocratise dans les années 2000. Si le \texttt{HTML} décrit le squelette et les informations du document, le \texttt{CSS} se charge de la mise en page. Aujourd'hui, d'autres standards se sont rajouter dans le milieu des pages WEB et les pages constituées à 100\% en HTML et CSS ne sont que des vestiges des années 2010.
+	Nous avons besoin d'un format qui soit accessible et reproductible facilement. Lorsque l'on pense à des éléments colorés et stylisés, on pense premièrement à une image. Mais détecter du texte dans une image pur ensuite reproduire une image est un travail assez contre productif. Dans un second temps, nous pouvons penser à un fichier PDF contenant le texte stylisé. Cette technique n'est malheureusement pas simple à réaliser en ayant un PDF avec le texte accessible. La création d'un document PDF peut s'effectuer avec un traitement de texte, mais créer un fichier \texttt{.odt} n'est pas non plus simple. Nous pouvons penser à un compilateur \LaTeX{} mais encore une fois c'est un énorme outil pour une petite tâche. Pour stocker du texte, on pense au format textuel comme le \texttt{.txt} ou le \texttt{Markdown} malheureusement ces formats ne prennent pas en compte les effets stylistiques. Nous avons besoin d'un outil entre le simple fichier texte et le document de traitement texte au niveau de la complexité. Deux éléments peuvent alors apparaitre la syntaxe Wiki, cela permet de créer de gros document avec une structure et de la mise en forme, l'inconvénient est qu'il faut un interpréteur Wiki. On peut finalement arriver au \texttt{HTML}, ce langage de description textuel, permet de restituer des éléments textuels stylisés. De plus il est facilement interprétable, il suffit d'un simple navigateur. Couplé au \texttt{CSS}, il permet de réaliser tous les effets hypertextuels que nous souhaitons.
+	\paragraph{HTML et CSS} Le \texttt{HTML} (Hyper Text Markup Language) et le \texttt{CSS} (Cascading Style Sheets) sont des langages de balisages et de mise en forme principalement utilisé sur l'internet. Le \texttt{HTML}, créé dans les années 1990, est un des premiers pas du Web tel qu'on le connais aujourd'hui. Le \texttt{CSS} se démocratise dans les années 2000. Si le \texttt{HTML} décrit le squelette et les informations du document, le \texttt{CSS} se charge de la mise en page. Aujourd'hui, d'autres standards se sont rajouter dans le milieu des pages WEB et les pages constituées à 100\% en HTML et CSS ne sont que des vestiges des années 2010.\newpage
 	\paragraph{Application à notre sujet} Nous souhaitons réaliser une simple page qui reprend le texte décodé et les effets détecter.
 \begin{lstlisting}[caption={Structure de base du HTML},language=HTML]
 <!DOCTYPE html>
@@ -133,8 +133,18 @@ endif
        endfor
 \end{lstlisting}
 		Cette fois dans le code \texttt{HTML}, on injecte une balise de type \textsl{<em>} en lui définissant le style, la couleur de la lettre, dans la balise.
+\begin{lstlisting}[caption={Insertion d'un caractère italique dans Octave},language=Octave]
+ predict=cstrcat("<em style='color:rgb(",num2str(colorL(1)),",",num2str(colorL(2)),",",num2str(colorL(3)),");'>",predict,"</em>");
+\end{lstlisting}
+		
 	\subsection{Dimension}
 	Le premier essais représentait le texte en police standard, minuscule sur la page web, nous avons donc décidé de gérer une notion de dimension des caractères. Pour cela, on se base sur la taille des tuiles de recherche. Plus la tuile est grande plus la police de caractère sur la page web sera grande.
+\begin{lstlisting}[caption={Insertion de la couleur de fond dans Octave},language=Octave]
+page=cstrcat("[..]<style>body{
+background:rgb(",num2str(colorBG(1)),",",num2str(colorBG(2)),",",num2str(colorBG(3)),");
+font-size:",num2str(dx_search*0.75),"px;
+}</style>[..]");
+\end{lstlisting}
 	\section{Résultats}
 	\paragraph{Couleurs}
 	Voici les résultats de notre script sur le fichier \texttt{Couleur.png}.
@@ -144,6 +154,7 @@ endif
 		\includegraphics[height=0.25\textwidth]{../illus/CouleurR.png}
 		\includegraphics[height=0.25\textwidth]{../illus/CouleurC.png}
 		\caption{Image, capture de la page web, capture du code}
+		\label{coul}
 	\end{figure}
 	\paragraph{Gras}
 	Voici les résultats de notre script sur le fichier \texttt{Gras.png}.
@@ -153,19 +164,21 @@ endif
 		\includegraphics[height=0.25\textwidth]{../illus/GrasR.png}
 		\includegraphics[height=0.25\textwidth]{../illus/GrasC.png}
 		\caption{Image, capture de la page web, capture du code}
+		\label{gras}
 	\end{figure}
 	\paragraph{Italique}
 	Voici les résultats de notre script sur le fichier \texttt{Italique.png}.
-	\begin{figure}[h]
+	\begin{figure}[!h]
 	\centering
 		\includegraphics[height=0.25\textwidth]{../illus/Italique.png}
 		\includegraphics[height=0.25\textwidth]{../illus/ItaliqueR.png}
 		\includegraphics[height=0.25\textwidth]{../illus/ItaliqueC.png}
 		\caption{Image, capture de la page web, capture du code}
+		\label{coul}
 	\end{figure}
 	\paragraph{Mix Total}
 	Voici les résultats de notre script sur le fichier \texttt{Mix.png}.
-	\begin{figure}[h]
+	\begin{figure}[!h]
 	\centering
 		\includegraphics[height=0.25\textwidth]{../illus/Mix.png}
 		\includegraphics[height=0.25\textwidth]{../illus/MixR.png}
@@ -174,6 +187,13 @@ endif
 	\end{figure}
 	\subsection{Limitations}
 	Les performances de notre script sont très limités. Chaque image présente des spécificités qui rendent la détection compliquée. Le script actuel est optimisé pour les majuscules et surtout pour les fichiers images tests fournis, le script fonctionne avec d'autres images mais les résultats ne seront pas parfait, avec par exemple des faux italiques, gras ou caractères. 
+	On peut voir sur cet exemple que des caractères ne sont plus détecté ou que des faux styles apparaissent.
+	\begin{figure}[!h]
+	\centering
+		\includegraphics[height=0.25\textwidth]{../illus/CRASH.png}
+		\includegraphics[height=0.25\textwidth]{../illus/fail.png}
+		\caption{Image, capture de la page web}
+	\end{figure}
 	\section{Conclusion}
 	Au fur et à mesure que le projet avancé, nous avons réussi à détecter de plus en plus d'éléments textuel et hypertextuel sur les images. Même si l'italique reste encore problématique, nous avons réussi à remplir les principaux objectifs.
 	Le script que nous avons réalisé n'est pas le plus optimal il détecte relativement souvent des \textit{faux}, en effet la corrélation n'est pas le plus puissant et le plus optimisé des outils pour réaliser ce travail.
