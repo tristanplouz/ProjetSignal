@@ -147,43 +147,44 @@ font-size:",num2str(dx_search*0.75),"px;
 \end{lstlisting}
 	\section{Résultats}
 	\paragraph{Couleurs}
-	Voici les résultats de notre script sur le fichier \texttt{Couleur.png}.
+	Figure \ref{coul}, on peut voir les résultats de notre script sur le fichier \texttt{Couleur.png}.
 	\begin{figure}[h]
 	\centering
-		\includegraphics[height=0.25\textwidth]{../illus/Couleur.png}
-		\includegraphics[height=0.25\textwidth]{../illus/CouleurR.png}
-		\includegraphics[height=0.25\textwidth]{../illus/CouleurC.png}
+		\includegraphics[height=0.2\textwidth]{../illus/Couleur.png}
+		\includegraphics[height=0.2\textwidth]{../illus/CouleurR.png}
+		\includegraphics[height=0.2\textwidth]{../illus/CouleurC.png}
 		\caption{Image, capture de la page web, capture du code}
 		\label{coul}
 	\end{figure}
 	\paragraph{Gras}
-	Voici les résultats de notre script sur le fichier \texttt{Gras.png}.
+Figure \ref{gras}, on peut voir les résultats de notre script sur le fichier \texttt{Gras.png}.
 	\begin{figure}[h]
 	\centering
-		\includegraphics[height=0.25\textwidth]{../illus/Gras.png}
-		\includegraphics[height=0.25\textwidth]{../illus/GrasR.png}
-		\includegraphics[height=0.25\textwidth]{../illus/GrasC.png}
+		\includegraphics[height=0.2\textwidth]{../illus/Gras.png}
+		\includegraphics[height=0.2\textwidth]{../illus/GrasR.png}
+		\includegraphics[height=0.2\textwidth]{../illus/GrasC.png}
 		\caption{Image, capture de la page web, capture du code}
 		\label{gras}
 	\end{figure}
 	\paragraph{Italique}
-	Voici les résultats de notre script sur le fichier \texttt{Italique.png}.
+	Figure \ref{it}, on peut voir les résultats de notre script sur le fichier \texttt{Italique.png}.
 	\begin{figure}[!h]
 	\centering
-		\includegraphics[height=0.25\textwidth]{../illus/Italique.png}
-		\includegraphics[height=0.25\textwidth]{../illus/ItaliqueR.png}
-		\includegraphics[height=0.25\textwidth]{../illus/ItaliqueC.png}
+		\includegraphics[height=0.2\textwidth]{../illus/Italique.png}
+		\includegraphics[height=0.2\textwidth]{../illus/ItaliqueR.png}
+		\includegraphics[height=0.2\textwidth]{../illus/ItaliqueC.png}
 		\caption{Image, capture de la page web, capture du code}
-		\label{coul}
+		\label{it}
 	\end{figure}
 	\paragraph{Mix Total}
-	Voici les résultats de notre script sur le fichier \texttt{Mix.png}.
+	Figure \ref{mix}, on peut voir les résultats de notre script sur le fichier \texttt{Mix.png}.
 	\begin{figure}[!h]
 	\centering
-		\includegraphics[height=0.25\textwidth]{../illus/Mix.png}
-		\includegraphics[height=0.25\textwidth]{../illus/MixR.png}
-		\includegraphics[height=0.25\textwidth]{../illus/MixC.png}
+		\includegraphics[height=0.2\textwidth]{../illus/Mix.png}
+		\includegraphics[height=0.2\textwidth]{../illus/MixR.png}
+		\includegraphics[height=0.2\textwidth]{../illus/MixC.png}
 		\caption{Image, capture de la page web, capture du code}
+		\label{mix}
 	\end{figure}
 	\subsection{Limitations}
 	Les performances de notre script sont très limités. Chaque image présente des spécificités qui rendent la détection compliquée. Le script actuel est optimisé pour les majuscules et surtout pour les fichiers images tests fournis, le script fonctionne avec d'autres images mais les résultats ne seront pas parfait, avec par exemple des faux italiques, gras ou caractères. 
@@ -192,7 +193,7 @@ font-size:",num2str(dx_search*0.75),"px;
 	\centering
 		\includegraphics[height=0.25\textwidth]{../illus/CRASH.png}
 		\includegraphics[height=0.25\textwidth]{../illus/fail.png}
-		\caption{Image, capture de la page web}
+		\caption{Image et capture de la page web}
 	\end{figure}
 	\section{Conclusion}
 	Au fur et à mesure que le projet avancé, nous avons réussi à détecter de plus en plus d'éléments textuel et hypertextuel sur les images. Même si l'italique reste encore problématique, nous avons réussi à remplir les principaux objectifs.

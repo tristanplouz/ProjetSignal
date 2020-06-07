@@ -48,7 +48,7 @@ function res=withoutMargin(file)
       break
     endif
   endfor
-  %On cherche la dernière ligne non vide
+    %On cherche la dernière ligne non vide
   for i=length(A)-1:-1:1
     if A(i)~=A(i-1)
       ymax=i;
@@ -84,7 +84,7 @@ function [res,B]=countCaracLine(mot)
 endfunction
 %Compte le nombre de caractères d'une ligne
 function [res,C]=countLine(mot)
- a=0;
+  a=0;
   A=mean(mot');
   A(A>min(A)/2)=200;
   C=[A' A' A' A'];
@@ -105,18 +105,22 @@ function [res,C]=countLine(mot)
     endif
   endfor
   if A(i)==200
-  res=a+1;
+    res=a+1;
   else
-   res=a;
+    res=a;
   endif
 endfunction
-
-function res=detectBgColor(file)
-  color{1}{1}=[0,0,0];
+%Retourne toutes les couleurs et leur proportion dans l'image
+function res=detectColor(color0,pas,data)
+  color{1}{1}=color0;
   color{1}{2}=0;
-  for i=1:10:length(file(:,1,1))-1
-    for j=1:10:length(file(1,:,1))-1
-      ctmp=[file(i,j,1),file(i,j,2),file(i,j,3)];
+  for i=1:pas:length(data(:,1,1))-1
+    for j=1:pas:length(data(1,:,1))-1
+      try
+        ctmp=[data(i,j,1),data(i,j,2),data(i,j,3)];
+      catch
+        ctmp=data(i,j);
+      end_try_catch
       p=0;
       for a=1:length(color)
         if color{a}{1} == ctmp
@@ -157,20 +161,15 @@ else
   fileI=file;  
 endif
 
-figure(1) 
-imshow(file)
-
 fileG=picPrep(fileI);%Prépare le fichier
 coor=withoutMargin(fileG);%Retire les marges
+
 try
-  mot=fileG(-5+coor(1):coor(2)+5,-5+coor(3):coor(4)+5);
+  mot=fileG(-5+coor(1):coor(2)+5,-5+coor(3):coor(4)+5);%Essaie de prendre un peu plus que les marges
 catch
-  mot=fileG(coor(1):coor(2),coor(3):coor(4));
+  mot=fileG(coor(1):coor(2),coor(3):coor(4));% Si l'image est déjà sans marge
 end_try_catch
-figure(2) 
-imshow(mot) 
-figure(3) 
-imshow(fileG)
+
 %Calcul du nombre de caractères
 [nb_carac_line,b]=countCaracLine(mot);
 nb_carac_col=countLine(mot);
@@ -181,41 +180,31 @@ state=1;
 dx_search = length(mot(1,:))/(nb_carac_line); 
 dy_search = length(mot(:,1))/nb_carac_col; 
 
-%Affichage du découpage en tuile
-##figure(1)
-##hold on;
-##imshow(mot)
-##imshow(b)
-##for i=0:nb_carac_line-1
-##  for k=0:nb_carac_col-1
-##    drawRect([i*dx_search-3 k*dy_search-3  dx_search+3 dy_search+3]);
-##  endfor
-##endfor
-##hold off
-##saveas(figure(1),"Rapports/illus/tuilesDUDH.png");
-
 data=glob("alphabet/*.png");%Import des adresses de motif de l'alphabet 
 if rep=yes_or_no("Le texte contient uniquement des majuscules?");  
   data=data(47:end); %On importe que les majuscules et la ponctuation
 endif
 
-hypert=false;
+hypert=false;%Hypertexte désactivé
 
 if rep=yes_or_no("Sortie fichier HTML (Si non, sortie console)?");  
- hypert=true;
- color=detectBgColor(file);
- colormax=[0,0];
+  hypert=true;%Activation des effets hypertexte
+  color=detectColor([0,0,0],10,file);
+  %recherche de la couleur la plus présente
+  colormax=[0,0];
   for i=1:length(color)
     if color{i}{2}>colormax(1)
       colormax(1)=color{i}{2};
       colormax(2)=i;
     endif
   endfor
+  %La couleur de fond est la couleur la plus présente
   colorBG=color{colormax(2)}{1};
   disp("Couleur de fond:")
   disp(colorBG)
- endif
- 
+endif
+
+%Informations utilisateurs
 disp("Nombre de caractère détecté:")
 disp(tot)
 disp("Caractère par ligne:")
@@ -248,263 +237,204 @@ mot_pred = "\n";
 
 for j=1:nb_carac_col %Pour chaque ligne
 %Calcul des dimensions en y de la tuile
-  ymin=dy_search*(j-1)-5; 
-  ymax=dy_search*(j-1)+dy_search+5; 
-  
-  if ymax>length(mot(:,1)) 
-    ymax=length(mot(:,1)); 
-  elseif ymin<1 
-    ymin=1; 
+ymin=dy_search*(j-1)-5; 
+ymax=dy_search*(j-1)+dy_search+5; 
+
+if ymax>length(mot(:,1)) 
+ymax=length(mot(:,1)); 
+elseif ymin<1 
+ymin=1; 
+endif 
+
+for i=1:nb_carac_line %Pour chaque caractère de la ligne
+  %Réinitialisation des paramètres de recherche
+  max_global=0; 
+  predict=""; 
+  alrChk=false;
+
+  %Calcul des dimensions en x de la tuile 
+  xmin=dx_search*(i-1)-3; 
+  xmax=dx_search*(i-1)+dx_search+3; 
+  if xmax>length(mot(1,:)) 
+    xmax=length(mot(1,:)); 
+  elseif xmin<1 
+    xmin=1; 
   endif 
-  
-  for i=1:nb_carac_line %Pour chaque caractère de la ligne
-%Réinitialisation des paramètres de recherche
-    max_global=0; 
-    predict=""; 
-    alrChk=false;
-    
-%Calcul des dimensions en x de la tuile 
-    xmin=dx_search*(i-1)-3; 
-    xmax=dx_search*(i-1)+dx_search+3; 
-    if xmax>length(mot(1,:)) 
-      xmax=length(mot(1,:)); 
-    elseif xmin<1 
-      xmin=1; 
-    endif 
-
-    tile = mot(ymin:ymax,xmin:xmax);%Création de la tuile
-    if hypert
-      tilec=file(coor(1)+ymin:coor(1)+ymax-4,coor(3)+xmin:coor(3)+xmax,:);
-##      figure(4)
-##      imshow(tilec)
-      clear colorT
-      colorT{1}{1}=colorBG;
-      colorT{1}{2}=0;
-      for i=1:5:length(tilec(:,1,1))-1
-        for j=1:5:length(tilec(1,:,1))-1
-          ctmp=[tilec(i,j,1),tilec(i,j,2),tilec(i,j,3)];
-          p=0;
-          for a=1:length(colorT)
-            if colorT{a}{1} == ctmp
-              colorT{a}{2}++;
-              p=1;
-              break;
-            else
-              p=0;
-            endif
-          endfor
-          if p==0
-            colorT{end+1}{1}=ctmp;
-            colorT{end}{2}=1;
-          endif
-        endfor
-      endfor
-      colormax=[0,1];
-      for i=1:length(colorT)
-        if colorT{i}{2}>colormax(1)
-          if colorT{i}{1}==colorBG
-            colormax(1);
-          else
-            colormax(1)=colorT{i}{2};
-            colormax(2)=i;
-          endif
+  tile = mot(ymin:ymax,xmin:xmax);%Création de la tuile
+  if hypert% Verification des effets hypertexte
+    tilec=file(coor(1)+ymin:coor(1)+ymax-4,coor(3)+xmin:coor(3)+xmax,:); %On créé une tuile coloré
+    clear colorT
+    colorT=detectColor(colorBG,5,tilec);
+    colormax=[0,1];
+    for i=1:length(colorT)
+      if colorT{i}{2}>colormax(1)
+        if colorT{i}{1}==colorBG
+          colormax(1);
+        else
+          colormax(1)=colorT{i}{2};
+          colormax(2)=i;
         endif
-      endfor
-      colorL=colorT{colormax(2)}{1};
-    endif
-    rapT=colorT{colormax(2)}{2}/colorT{1}{2};
-    kech=0;
-    
-    mt=mean(tile)(1:end);
-    a=2;
-    while(mt(a-1)>=mt(a))
-      a++;
-      if a>length(mt)*9/10
-        a=0;
-        break
-      end
-    endwhile
-     [c,d]=max(mt);
-     vIt=(d-a)/c
-     it=false;
-     if ((vIt>38 &&vIt<130) ||(vIt>188 &&vIt<280) ||(vIt>720 && vIt<830))
-       for h=1:length(tile)-1
-        tile(end-h,:)=[tile(end-h,1+round(h*length(tile(1,:))/(length(tile)*4.1)):end) tile(end-h,1:round(h*length(tile(1,:))/(length(tile)*4.1)))];
-        it=true;
-       endfor
-       tile(:,8.5*length(tile(1,:))/10:end)=min(min(tile));
-       tile=[tile(:,8.5*length(tile(1,:))/10:end) tile(:,1:8.5*length(tile(1,:))/10)];
-       tile(:,1:1.5*length(tile(1,:))/10)=min(min(tile));
-     endif
-    for k=1:length(alpha) 
-      %Chargement des motifs 
-      ech=cell2mat(alpha{k}(1));
-      if alrChk == false
-        if checkEmptyTile(tile) %Si la tuile est vide on défini un espace et on break
-          predict=" ";
-          break
-        endif
-        alrChk=true;
       endif
-      
-%Display échantillon 
-##      figure(2); 
-##      imshow(ech); 
+    endfor
+    colorL=colorT{colormax(2)}{1};
+    rapT=colorT{colormax(2)}{2}/colorT{1}{2};
+  endif
+  kech=0;
 
-      
-%Intercorrelation  
-      hold off
-      d=normxcorr2(ech,tile);  
- 
-%Display correlation
-##      figure(4); 
-##      colormap("jet"); 
-##      surf(d,"edgecolor","none") 
-##      saveas(figure(3),"Rapports/illus/tuilev.png");
-##      saveas(figure(2),"Rapports/illus/2echv.png");
-##      saveas(figure(4),"Rapports/illus/2corv.png");
+  mt=mean(tile)(1:end);
+  a=2;
+  while(mt(a-1)>=mt(a))
+    a++;
+    if a>length(mt)*9/10
+      a=0;
+      break
+    endif
+  endwhile
+  [c,d]=max(mt);
+  vIt=(d-a)/c
+  it=false;
+  if ((vIt>38 &&vIt<130) ||(vIt>188 &&vIt<280) ||(vIt>720 && vIt<830))
+    for h=1:length(tile)-1
+      tile(end-h,:)=[tile(end-h,1+round(h*length(tile(1,:))/(length(tile)*4.1)):end) tile(end-h,1:round(h*length(tile(1,:))/(length(tile)*4.1)))];
+    it=true;
+    endfor
+    tile(:,8.5*length(tile(1,:))/10:end)=min(min(tile));
+    tile=[tile(:,8.5*length(tile(1,:))/10:end) tile(:,1:8.5*length(tile(1,:))/10)];
+    tile(:,1:1.5*length(tile(1,:))/10)=min(min(tile));
+  endif
+  for k=1:length(alpha) 
+    %Chargement des motifs 
+    ech=cell2mat(alpha{k}(1));
+    if alrChk == false
+      if checkEmptyTile(tile) %Si la tuile est vide on défini un espace et on break
+        predict=" ";
+        break
+      endif
+    alrChk=true;
+    endif
 
-      max_local=max(max(d(length(d)*1.2/4:end,length(d(:,1))/9:8*length(d(:,1))/9))); 
-      if max_local > max_global 
-%Chargement de la lettre echantillon
-        l=char(alpha{k}(2));
-        kech=k;
-        max_global = max_local;
-        if max_global < 0.55
-           predict = " "; 
-        else 
-            switch l 
-              case "Qdot" 
-                if predict==""
-                  predict = "?";
-                endif
-            case "Ap" 
-              if predict==""
-                predict = "'";
-                endif
-            case "Vir" 
-              if predict==""
-                predict = ",";
-                endif
-            case "Vdot" 
-              if predict==""
-                predict = ";";
-                endif
-            case "Tir" 
-              if predict==""
-                predict = "-";
-                endif
-            case "Edot" 
-              if predict==""
-                predict = "!";
-                endif
+    %Intercorrelation  
+    hold off
+    d=normxcorr2(ech,tile);  
+    max_local=max(max(d(length(d)*1.2/4:end,length(d(:,1))/9:8*length(d(:,1))/9))); %recherche du max vers le centre
+    if max_local > max_global 
+      %Chargement de la lettre echantillon
+      l=char(alpha{k}(2));
+      kech=k;
+      max_global = max_local;
+      if max_global < 0.55
+        predict = " "; 
+      else 
+        switch l 
+          case "Qdot" 
+            if predict==""
+              predict = "?";
+            endif
+          case "Ap" 
+            if predict==""
+              predict = "'";
+            endif
+          case "Vir" 
+            if predict==""
+              predict = ",";
+            endif
+          case "Vdot" 
+            if predict==""
+              predict = ";";
+            endif
+          case "Tir" 
+            if predict==""
+              predict = "-";
+            endif
+          case "Edot" 
+            if predict==""
+              predict = "!";
+            endif
           case "Dot" 
-              if predict==""
-                predict = "." 
-                endif
-            case "Ddot" 
-              if predict==""
-                predict = ":";
-                endif
-              otherwise 
-                predict=l;
-            endswitch 
-        endif 
-        if max_global > 0.9
-          switch predict
-            case 'v'
-            case 'n'
-            case '.'
-            case ','
-            case ';'
-            case 'o'
-            otherwise 
-                break
+            if predict==""
+              predict = "." 
+            endif
+          case "Ddot" 
+            if predict==""
+              predict = ":";
+            endif
+          otherwise 
+            predict=l;
           endswitch 
-        endif 
       endif 
-      
-    endfor 
-    if hypert
-      if kech!=0
+      if max_global > 0.9
+        switch predict
+          case 'v'
+          case 'n'
+          case '.'
+          case ','
+          case ';'
+          case 'o'
+          otherwise 
+            break
+        endswitch 
+      endif 
+    endif 
+  endfor 
+  if hypert
+    if kech!=0
       ech=cell2mat(alpha{kech}(1));
       ech=ech(:,end/3:2*end/3);
       clear colorE
-      colorE{1}{1}=0;
-      colorE{1}{2}=0;
-      for i=1:5:length(ech(:,1,1))-1
-        for j=1:5:length(ech(1,:,1))-1
-          p=0;
-          for a=1:length(colorE)
-            if colorE{a}{1} == ech(i,j)
-              colorE{a}{2}++;
-              p=1;
-              break;
-            else
-              p=0;
-            endif
-          endfor
-          if p==0
-            colorE{end+1}{1}=ech(i,j);
-            colorE{end}{2}=1;
-          endif
-        endfor
-      endfor
+      colorE=detectColor(0,5,ech);
+      rapE=colorE{3}{2}/colorE{2}{2};
+      G=rapT/rapE
     else 
       G=0;
     endif
-      rapE=colorE{3}{2}/colorE{2}{2};
-      G=rapT/rapE
-      if it && G > 0.63 && G < 10
-        if predict=="A" && vIt>250
-          predict=cstrcat("<em style='color:rgb(",num2str(colorL(1)),",",num2str(colorL(2)),",",num2str(colorL(3)),");'>",predict,"</em>");
-        elseif predict=="A" && vIt<250
-          predict=cstrcat("<strong style='color:rgb(",num2str(colorL(1)),",",num2str(colorL(2)),",",num2str(colorL(3)),");'>",predict,"</strong>");
-          else 
-          predict=cstrcat("<em><strong style='color:rgb(",num2str(colorL(1)),",",num2str(colorL(2)),",",num2str(colorL(3)),");'>",predict,"</strong></em>");
-        endif
-        disp("Gras et italique")
-        
-      elseif it
-        disp("Italique")
-        if predict=="Y" && vIt<110
-          predict=cstrcat("<span style='color:rgb(",num2str(colorL(1)),",",num2str(colorL(2)),",",num2str(colorL(3)),");'>",predict,"</span>");
-        else
-          predict=cstrcat("<em style='color:rgb(",num2str(colorL(1)),",",num2str(colorL(2)),",",num2str(colorL(3)),");'>",predict,"</em>");
-        endif
-        it=false;
-      elseif  G > 0.63 && G < 10
-        disp("Gras")
-        if predict=="I" && G<0.875
-          predict=cstrcat("<span style='color:rgb(",num2str(colorL(1)),",",num2str(colorL(2)),",",num2str(colorL(3)),");'>",predict,"</span>");
-        else
-          predict=cstrcat("<strong style='color:rgb(",num2str(colorL(1)),",",num2str(colorL(2)),",",num2str(colorL(3)),");'>",predict,"</strong>");
-        endif
-      else
-        predict=cstrcat("<span style='color:rgb(",num2str(colorL(1)),",",num2str(colorL(2)),",",num2str(colorL(3)),");'>",predict,"</span>");
+    if it && G > 0.63 && G < 10
+      if predict=="A" && vIt>250
+        predict=cstrcat("<em style='color:rgb(",num2str(colorL(1)),",",num2str(colorL(2)),",",num2str(colorL(3)),");'>",predict,"</em>");
+      elseif predict=="A" && vIt<250
+        predict=cstrcat("<strong style='color:rgb(",num2str(colorL(1)),",",num2str(colorL(2)),",",num2str(colorL(3)),");'>",predict,"</strong>");
+      else 
+        predict=cstrcat("<em><strong style='color:rgb(",num2str(colorL(1)),",",num2str(colorL(2)),",",num2str(colorL(3)),");'>",predict,"</strong></em>");
       endif
-      mot_pred = cstrcat(mot_pred, predict);
+      disp("Gras et italique")
+    elseif it
+      disp("Italique")
+      if predict=="Y" && vIt<110
+        predict=cstrcat("<span style='color:rgb(",num2str(colorL(1)),",",num2str(colorL(2)),",",num2str(colorL(3)),");'>",predict,"</span>");
+      else
+        predict=cstrcat("<em style='color:rgb(",num2str(colorL(1)),",",num2str(colorL(2)),",",num2str(colorL(3)),");'>",predict,"</em>");
+      endif
+      it=false;
+     elseif  G > 0.63 && G < 10
+      disp("Gras")
+      if predict=="I" && G<0.875
+        predict=cstrcat("<span style='color:rgb(",num2str(colorL(1)),",",num2str(colorL(2)),",",num2str(colorL(3)),");'>",predict,"</span>");
+      else
+        predict=cstrcat("<strong style='color:rgb(",num2str(colorL(1)),",",num2str(colorL(2)),",",num2str(colorL(3)),");'>",predict,"</strong>");
+      endif
     else
+      predict=cstrcat("<span style='color:rgb(",num2str(colorL(1)),",",num2str(colorL(2)),",",num2str(colorL(3)),");'>",predict,"</span>");
+    endif
+    mot_pred = cstrcat(mot_pred, predict);
+  else
     mot_pred = cstrcat(mot_pred, predict); 
-    endif
-    %info utilisateur
-    disp(cstrcat("Caractère : ",num2str(state)," sur ",num2str(tot) ," en ",num2str(time()-sec),"s (eta ",num2str((tot-state)*(time()-sec0)/state),"s)")) 
-    state++; 
-    sec=time(); 
-  endfor 
-  if hypert
-      mot_pred = cstrcat(mot_pred, "<br>"); 
-    else
-    mot_pred = cstrcat(mot_pred, "\n"); 
-    endif
-  
+  endif
+  %info utilisateur
+  disp(cstrcat("Caractère : ",num2str(state)," sur ",num2str(tot) ," en ",num2str(time()-sec),"s (eta ",num2str((tot-state)*(time()-sec0)/state),"s)")) 
+  state++; 
+  sec=time(); 
 endfor 
-
+  if hypert
+    mot_pred = cstrcat(mot_pred, "<br>"); 
+  else
+    mot_pred = cstrcat(mot_pred, "\n"); 
+  endif
+endfor 
 if hypert
-  
-
-  page=cstrcat("<!DOCTYPE html><html><head><title>Texte créé par le script de décodage d'image</title><style>body{font-size:",num2str(dx_search*0.75),"px;color:white;background:rgb(",num2str(colorBG(1)),",",num2str(colorBG(2)),",",num2str(colorBG(3)),");}</style></head><body>",mot_pred,"</body></html>");
- 
+  %Export en HTML
+  htmldat="<!DOCTYPE html><html><head><title>Texte créé par le script de décodage d'image</title><style>";
+  page=cstrcat(htmldat,"body{font-size:",num2str(dx_search*0.75),
+  "px;color:white;background:rgb(",num2str(colorBG(1)),",",num2str(colorBG(2)),",",num2str(colorBG(3)),
+  ");}</style></head><body>",mot_pred,"</body></html>");
   fid=fopen ("output.html", "w");
   fputs(fid,page);
   disp("Texte décodé et sauvegardé dans output.html")
@@ -512,6 +442,3 @@ else
   %Info utilisateur
   disp(cstrcat("Texte extrait de ",fileAdr," en ",num2str(time()-sec0),":\n",mot_pred))
 endif
-
-%Ait(end-i,:)=[Ait(end-i,1+round(i*71/320):end) Ait(end-i,1:round(i*71/320))];
-
