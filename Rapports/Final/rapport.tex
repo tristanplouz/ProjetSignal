@@ -46,14 +46,14 @@
 	\tableofcontents
 	\newpage
 	\section{Introduction}
-	Le présent rapport ne comprend que les éléments du livrable supplémentaire. Les principales fonctionnalités sont présentées dans le rapport d'avancement 2. Les précédents codes, sources et rapports sont disponible sur le dépôt Git du projet : \url{https://github.com/tristanplouz/ProjetSignal} \\
-	Le livrable supplémentaire que nous avons décidé d'implémenter est la reconnaissance des couleurs et des styles. En effet reconnaitre du texte de toutes les couleurs mais ne pas pouvoir le retransmettre en couleur et avec des effets, c'est un peu triste, tout comme un ciel gris strasbourgeois ou un monde sans aucune couleur.
+	Le présent rapport ne comprend que les éléments du livrable supplémentaire. Les principales fonctionnalités sont présentées dans le rapport d'avancement 2. Les précédents codes, sources et rapports sont disponibles sur le dépôt Git du projet : \url{https://github.com/tristanplouz/ProjetSignal} \\
+	Le livrable supplémentaire que nous avons décidé d'implémenter est la reconnaissance des couleurs et des styles. En effet reconnaître du texte de toutes les couleurs mais ne pas pouvoir le retransmettre en couleur et avec des effets, c'est un peu triste, tout comme un ciel gris strasbourgeois ou un monde sans aucune couleur.
 	Nous allons dans un premier temps parler de comment retransmettre un document en couleur et dans un second temps nous verrons comment détecter les styles et les couleurs.
 	\section{Retransmission}
 	Dans la partie suivante, nous allons parler de comment détecter les éléments hypertextuels, mais dans cette partie nous allons parler de comment les retransmettre.\\
-	Nous avons besoin d'un format qui soit accessible et reproductible facilement. Lorsque l'on pense à des éléments colorés et stylisés, on pense premièrement à une image. Mais détecter du texte dans une image pur ensuite reproduire une image est un travail assez contre productif. Dans un second temps, nous pouvons penser à un fichier PDF contenant le texte stylisé. Cette technique n'est malheureusement pas simple à réaliser en ayant un PDF avec le texte accessible. La création d'un document PDF peut s'effectuer avec un traitement de texte, mais créer un fichier \texttt{.odt} n'est pas non plus simple. Nous pouvons penser à un compilateur \LaTeX{} mais encore une fois c'est un énorme outil pour une petite tâche. Pour stocker du texte, on pense au format textuel comme le \texttt{.txt} ou le \texttt{Markdown} malheureusement ces formats ne prennent pas en compte les effets stylistiques. Nous avons besoin d'un outil entre le simple fichier texte et le document de traitement texte au niveau de la complexité. Deux éléments peuvent alors apparaitre la syntaxe Wiki, cela permet de créer de gros document avec une structure et de la mise en forme, l'inconvénient est qu'il faut un interpréteur Wiki. On peut finalement arriver au \texttt{HTML}, ce langage de description textuel, permet de restituer des éléments textuels stylisés. De plus il est facilement interprétable, il suffit d'un simple navigateur. Couplé au \texttt{CSS}, il permet de réaliser tous les effets hypertextuels que nous souhaitons.
-	\paragraph{HTML et CSS} Le \texttt{HTML} (Hyper Text Markup Language) et le \texttt{CSS} (Cascading Style Sheets) sont des langages de balisages et de mise en forme principalement utilisé sur l'internet. Le \texttt{HTML}, créé dans les années 1990, est un des premiers pas du Web tel qu'on le connais aujourd'hui. Le \texttt{CSS} se démocratise dans les années 2000. Si le \texttt{HTML} décrit le squelette et les informations du document, le \texttt{CSS} se charge de la mise en page. Aujourd'hui, d'autres standards se sont rajouter dans le milieu des pages WEB et les pages constituées à 100\% en HTML et CSS ne sont que des vestiges des années 2010.\newpage
-	\paragraph{Application à notre sujet} Nous souhaitons réaliser une simple page qui reprend le texte décodé et les effets détecter.
+	Nous avons besoin d'un format qui soit accessible et reproductible facilement. Lorsque l'on pense à des éléments colorés et stylisés, on pense premièrement à une image. Mais détecter du texte dans une image pour ensuite reproduire une image est un travail assez contre productif. Dans un second temps, nous pouvons penser à un fichier PDF contenant le texte stylisé. Cette technique n'est malheureusement pas simple à réaliser en ayant un PDF avec le texte accessible. La création d'un document PDF peut s'effectuer avec un traitement de texte, mais créer un fichier \texttt{.odt} n'est pas non plus simple. Nous pouvons penser à un compilateur \LaTeX{} mais encore une fois c'est un énorme outil pour une petite tâche. Pour stocker du texte, on pense au format textuel comme le \texttt{.txt} ou le \texttt{Markdown} malheureusement ces formats ne prennent pas en compte les effets stylistiques. Nous avons besoin d'un outil entre le simple fichier texte et le document de traitement texte au niveau de la complexité. Deux éléments peuvent alors apparaître la syntaxe Wiki, cela permet de créer de gros documents avec une structure et de la mise en forme, l'inconvénient est qu'il faut un interpréteur Wiki. On peut finalement arriver au \texttt{HTML}, ce langage de description textuel, permet de restituer des éléments textuels stylisés. De plus il est facilement interprétable, il suffit d'un simple navigateur. Couplé au \texttt{CSS}, il permet de réaliser tous les effets hypertextuels que nous souhaitons.
+	\paragraph{HTML et CSS} Le \texttt{HTML} (Hyper Text Markup Language) et le \texttt{CSS} (Cascading Style Sheets) sont des langages de balisage et de mise en forme principalement utilisés sur l'internet. Le \texttt{HTML}, créé dans les années 1990, est un des premiers pas du Web tel qu'on le connaît aujourd'hui. Le \texttt{CSS} se démocratise dans les années 2000. Si le \texttt{HTML} décrit le squelette et les informations du document, le \texttt{CSS} se charge de la mise en page. Aujourd'hui, d'autres standards se sont rajoutés dans le milieu des pages WEB et les pages constituées à 100\% en HTML et CSS ne sont que des vestiges des années 2010.\newpage
+	\paragraph{Application à notre sujet} Nous souhaitons réaliser une simple page qui reprend le texte décodé et les effets détectés.
 \begin{lstlisting}[caption={Structure de base du HTML},language=HTML]
 <!DOCTYPE html>
 <html>
@@ -68,15 +68,15 @@
 	</body>
 </html>
 \end{lstlisting}
-	Afin de réaliser cela, notre code va créer des chaines de caractères comportant les balises \texttt{HTML} requises et en ajoutant des propriétés de style correspondantes.
+	Afin de réaliser cela, notre code va créer des chaînes de caractères comportant les balises \texttt{HTML} requises et en ajoutant des propriétés de style correspondantes.
 	\section{Détection}
-	Dans nos applications, nous laissons toujours le choix à l'utilisateur de ce qu'il souhaite. Nous demandons à l'utilisateur si il souhaite une sortie texte simple dans la console ou si il souhaite les éléments textuels et hypertextuels. Si le texte comprend des éléments hypertextuels mais que l'utilisateur à demander une sortie simple, il peut y avoir des erreurs de détection.
+	Dans nos applications, nous laissons toujours le choix à l'utilisateur de ce qu'il souhaite. Nous demandons à l'utilisateur si il souhaite une sortie texte simple dans la console ou si il souhaite les éléments textuels et hypertextuels. Si le texte comprend des éléments hypertextuels mais que l'utilisateur a demandé une sortie simple, il peut y avoir des erreurs de détection.
 	\subsection{Couleurs}
 	Dans un premier temps, nous allons voir comment nous détectons les couleurs. 
 	\paragraph{Les couleurs} Les couleurs sont ici codées sur 3 octets représentant respectivement le rouge, le vert et le bleu. Ce système de couleur est donc cubique. Nous pouvons donc avoir 256 valeurs de rouge, de bleu et de vert, en les "mélangeant" nous pouvons donc obtenir $256*256*256=1.6777216\times 10^7$ couleurs. On travaille en synthèse additive, si on somme toutes les couleurs on obtient du blanc.\\
-	Il existe en revanche d'autres système de codage des couleurs comme le CMY (Cyan, Magenta, Yellow) qui travaille en synthèse soustractive, si on somme toutes les couleurs on obtient du noir.\\ Ou encore le système HSL (Hue, Saturation, Luminance), où on travaille avec une teinte, une saturation et une luminosité, on ne travaille plus dans un cube mais dans un cone ou double cone.
+	Il existe en revanche d'autres systèmes de codage des couleurs comme le CMY (Cyan, Magenta, Yellow) qui travaille en synthèse soustractive, si on somme toutes les couleurs on obtient du noir.\\ Ou encore le système HSL (Hue, Saturation, Luminance), où on travaille avec une teinte, une saturation et une luminosité, on ne travaille plus dans un cube mais dans un cône ou double cône.
 	\paragraph{Traitement} Notre image est donc une matrice dont chaque élément, pixel, est représenté par son intensité en rouge, vert et en bleu. 
-	\subparagraph{Arrière plan} Dans un premier temps, nous détectons la couleur de l'arrière plan en effet, elle sera utile par la suite. On considère que la couleur du fond est uniforme. Nous allons donc parcourir toute l'image et compter les occurrences de chaque couleur. On peut ensuite trouver la couleur la plus présente est en déduire que c'est la couleur de fond.  \\
+	\subparagraph{Arrière plan} Dans un premier temps, nous détectons la couleur de l'arrière plan en effet, elle sera utile par la suite. On considère que la couleur du fond est uniforme. Nous allons donc parcourir toute l'image et compter les occurrences de chaque couleur. On peut ensuite trouver la couleur la plus présente et en déduire que c'est la couleur de fond.  \\
 	On l'inscrit ensuite dans la page \texttt{HTML}.
 	\begin{lstlisting}[caption={Style pour le fond},language=HTML]
 <style>
@@ -94,7 +94,7 @@ page=cstrcat("[..]<style>body{background:rgb(",num2str(colorBG(1)),",",num2str(c
 predict=cstrcat("<span style='color:rgb(",num2str(colorL(1)),",",num2str(colorL(2)),",",num2str(colorL(3)),");'>",predict,"</span>");
 \end{lstlisting}
 	\paragraph{Optimisation}
-	Parcourir toutes l'image pour chercher chaque couleur est une technique un peu longue et pas vraiment utile. C'est pour cela que l'on ne parcourt pas l'image dans son entièreté mais seulement une colonne et une ligne tous les x, ainsi on obtient une image où les proportions de couleurs sont respectées et donc on accélère le traitement.
+	Parcourir toute l'image pour chercher chaque couleur est une technique un peu longue et pas vraiment utile. C'est pour cela que l'on ne parcourt pas l'image dans son entièreté mais seulement une colonne et une ligne tous les x, ainsi on obtient une image où les proportions de couleurs sont respectées et donc on accélère le traitement.
 	\begin{figure}[h]
 	\centering
 		\includegraphics[width=0.25\textwidth]{../illus/1s1.png}
@@ -115,18 +115,18 @@ endif
 \end{lstlisting}
 	\subsection{Italique}
 	Pour détecter l'\textit{italique}, on constate que en revanche, ici, la forme de la lettre change, elle subit une inclinaison.
-	En revanche détecter l'inclinaison d'une lettre est faisable, même si cela pose des propblèmes avec les lettres penchées de base comme: \texttt{A,V,X,W,Y,y,v,x,w,...}
-	Pou cela nous regardons les variations de la projection de la lettre. Nous calculons la moyenne colonne par colonne, suivant le profil de la courbe, on peut déterminer des propriétés de la lettre.
+	En revanche détecter l'inclinaison d'une lettre est faisable, même si cela pose des problèmes avec les lettres penchées de base comme: \texttt{A,V,X,W,Y,y,v,x,w,...}
+	Pour cela nous regardons les variations de la projection de la lettre. Nous calculons la moyenne colonne par colonne, suivant le profil de la courbe, on peut déterminer des propriétés de la lettre.
 	\begin{figure}[h]
 	\centering
 		\includegraphics[width=0.35\textwidth]{../illus/comp/projO.png}
 		\includegraphics[width=0.35\textwidth]{../illus/comp/projS.png}\\
 		\includegraphics[width=0.35\textwidth]{../illus/comp/projP.png}
 		\includegraphics[width=0.35\textwidth]{../illus/comp/projA.png}
-		\caption{Profil de certaines lettres: \texttt{O,S,P,A}, en rouge le normal et en blue l'italique}
+		\caption{Profil de certaines lettres: \texttt{O,S,P,A}, en rouge le normal et en bleu l'italique}
 	\end{figure}
-	Pour certain caractère, c'est plus simple que pour d'autres.
-	Un fois que la lettre est détéctée comme étant en \textit{italique}, on la redresse d'un certain coefficiant pour cela, on décale chaque ligne de pixel de plus en plus en exécutant le code suivant:
+	Pour certains caractères, c'est plus simple que pour d'autres.
+	Une fois que la lettre est détéctée comme étant en \textit{italique}, on la redresse d'un certain coefficient pour cela, on décale chaque ligne de pixel de plus en plus en exécutant le code suivant:
 	\begin{lstlisting}[caption={Redressage de caractère dans Octave},language=Octave]
  for h=1:length(tile)-1
         tile(end-h,:)=[tile(end-h,1+round(h*length(tile(1,:))/(length(tile)*4.1)):end) tile(end-h,1:round(h*length(tile(1,:))/(length(tile)*4.1)))];
@@ -138,7 +138,7 @@ endif
 \end{lstlisting}
 		
 	\subsection{Dimension}
-	Le premier essais représentait le texte en police standard, minuscule sur la page web, nous avons donc décidé de gérer une notion de dimension des caractères. Pour cela, on se base sur la taille des tuiles de recherche. Plus la tuile est grande plus la police de caractère sur la page web sera grande.
+	Le premier essai représentait le texte en police standard, minuscule sur la page web, nous avons donc décidé de gérer une notion de dimension des caractères. Pour cela, on se base sur la taille des tuiles de recherche. Plus la tuile est grande plus la police de caractère sur la page web sera grande.
 \begin{lstlisting}[caption={Insertion de la couleur de fond dans Octave},language=Octave]
 page=cstrcat("[..]<style>body{
 background:rgb(",num2str(colorBG(1)),",",num2str(colorBG(2)),",",num2str(colorBG(3)),");
@@ -187,8 +187,8 @@ Figure \ref{gras}, on peut voir les résultats de notre script sur le fichier \t
 		\label{mix}
 	\end{figure}
 	\subsection{Limitations}
-	Les performances de notre script sont très limités. Chaque image présente des spécificités qui rendent la détection compliquée. Le script actuel est optimisé pour les majuscules et surtout pour les fichiers images tests fournis, le script fonctionne avec d'autres images mais les résultats ne seront pas parfait, avec par exemple des faux italiques, gras ou caractères. 
-	On peut voir sur cet exemple que des caractères ne sont plus détecté ou que des faux styles apparaissent.
+	Les performances de notre script sont très limitées. Chaque image présente des spécificités qui rendent la détection compliquée. Le script actuel est optimisé pour les majuscules et surtout pour les fichiers images tests fournis, le script fonctionne avec d'autres images mais les résultats ne seront pas parfaits, avec par exemple des faux italiques, gras ou caractères. 
+	On peut voir sur cet exemple que des caractères ne sont plus détectés ou que des faux styles apparaissent.
 	\begin{figure}[!h]
 	\centering
 		\includegraphics[height=0.25\textwidth]{../illus/CRASH.png}
@@ -196,7 +196,7 @@ Figure \ref{gras}, on peut voir les résultats de notre script sur le fichier \t
 		\caption{Image et capture de la page web}
 	\end{figure}
 	\section{Conclusion}
-	Au fur et à mesure que le projet avancé, nous avons réussi à détecter de plus en plus d'éléments textuel et hypertextuel sur les images. Même si l'italique reste encore problématique, nous avons réussi à remplir les principaux objectifs.
+	Au fur et à mesure que le projet a avancé, nous avons réussi à détecter de plus en plus d'éléments textuel et hypertextuel sur les images. Même si l'italique reste encore problématique, nous avons réussi à remplir les principaux objectifs.
 	Le script que nous avons réalisé n'est pas le plus optimal il détecte relativement souvent des \textit{faux}, en effet la corrélation n'est pas le plus puissant et le plus optimisé des outils pour réaliser ce travail.
 	De plus de nombreuses améliorations seraient encore à rajouter, comme par exemple la gestion de différentes tailles de caractères ou même de différentes polices.
 	\listoffigures
