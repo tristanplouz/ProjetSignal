@@ -172,6 +172,8 @@ endif
 		\includegraphics[height=0.25\textwidth]{../illus/MixC.png}
 		\caption{Image, capture de la page web, capture du code}
 	\end{figure}
+	\subsection{Limitations}
+	Les performances de notre script sont très limités. Chaque image présente des spécificités qui rendent la détection compliquée. Le script actuel est optimisé pour les majuscules et surtout pour les fichiers images tests fournis, le script fonctionne avec d'autres images mais les résultats ne seront pas parfait, avec par exemple des faux italiques, gras ou caractères. 
 	\section{Conclusion}
 	Au fur et à mesure que le projet avancé, nous avons réussi à détecter de plus en plus d'éléments textuel et hypertextuel sur les images. Même si l'italique reste encore problématique, nous avons réussi à remplir les principaux objectifs.
 	Le script que nous avons réalisé n'est pas le plus optimal il détecte relativement souvent des \textit{faux}, en effet la corrélation n'est pas le plus puissant et le plus optimisé des outils pour réaliser ce travail.

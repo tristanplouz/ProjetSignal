@@ -64,7 +64,7 @@ function [res,B]=countCaracLine(mot)
   A(A>min(A)/2)=200;
   B=[A;A;A;A;A;A;A;A;A;A;A;A;A;A;A;A];
   xprec=x=eprec=0;
-  for i=5:length(A)-5
+  for i=10:length(A)-15
     if A(i)>100+A(i-1)%Détection d'un saut de valeur
       if i-xprec>0.85*eprec
         a+=1;
@@ -264,8 +264,8 @@ for j=1:nb_carac_col %Pour chaque ligne
     alrChk=false;
     
 %Calcul des dimensions en x de la tuile 
-    xmin=dx_search*(i-1)-5; 
-    xmax=dx_search*(i-1)+dx_search+5; 
+    xmin=dx_search*(i-1)-3; 
+    xmax=dx_search*(i-1)+dx_search+3; 
     if xmax>length(mot(1,:)) 
       xmax=length(mot(1,:)); 
     elseif xmin<1 
@@ -274,7 +274,7 @@ for j=1:nb_carac_col %Pour chaque ligne
 
     tile = mot(ymin:ymax,xmin:xmax);%Création de la tuile
     if hypert
-      tilec=file(coor(1)+ymin:coor(1)+ymax,coor(3)+xmin:coor(3)+xmax,:);
+      tilec=file(coor(1)+ymin:coor(1)+ymax-4,coor(3)+xmin:coor(3)+xmax,:);
 ##      figure(4)
 ##      imshow(tilec)
       clear colorT
@@ -313,11 +313,29 @@ for j=1:nb_carac_col %Pour chaque ligne
       colorL=colorT{colormax(2)}{1};
     endif
     rapT=colorT{colormax(2)}{2}/colorT{1}{2};
-    clear kech
+    kech=0;
     
-    
-    %1,47 47 end
-    mean(mean(tile(1:dy_search/10,:)))
+    mt=mean(tile)(1:end);
+    a=2;
+    while(mt(a-1)>=mt(a))
+      a++;
+      if a>length(mt)*9/10
+        a=0;
+        break
+      end
+    endwhile
+     [c,d]=max(mt);
+     vIt=(d-a)/c
+     it=false;
+     if ((vIt>38 &&vIt<130) ||(vIt>150 &&vIt<280) ||(vIt>720 && vIt<1000))
+       for h=1:length(tile)-1
+        tile(end-h,:)=[tile(end-h,1+round(h*length(tile(1,:))/(length(tile)*4.1)):end) tile(end-h,1:round(h*length(tile(1,:))/(length(tile)*4.1)))];
+        it=true;
+       endfor
+       tile(:,8.5*length(tile(1,:))/10:end)=min(min(tile));
+       tile=[tile(:,8.5*length(tile(1,:))/10:end) tile(:,1:8.5*length(tile(1,:))/10)];
+       tile(:,1:1.5*length(tile(1,:))/10)=min(min(tile));
+     endif
     for k=1:length(alpha) 
       %Chargement des motifs 
       ech=cell2mat(alpha{k}(1));
@@ -332,11 +350,10 @@ for j=1:nb_carac_col %Pour chaque ligne
 %Display échantillon 
 ##      figure(2); 
 ##      imshow(ech); 
-%Display tuile 
-##      figure(3);  
-##      imshow(tile);
+
       
 %Intercorrelation  
+      hold off
       d=normxcorr2(ech,tile);  
  
 %Display correlation
@@ -347,32 +364,48 @@ for j=1:nb_carac_col %Pour chaque ligne
 ##      saveas(figure(2),"Rapports/illus/2echv.png");
 ##      saveas(figure(4),"Rapports/illus/2corv.png");
 
-      max_local=max(max(d)); 
+      max_local=max(max(d(length(d)*1.2/4:end,length(d(:,1))/9:8*length(d(:,1))/9))); 
       if max_local > max_global 
 %Chargement de la lettre echantillon
         l=char(alpha{k}(2));
         kech=k;
-        max_global = max_local
-        if max_global < 0.7 
+        max_global = max_local;
+        if max_global < 0.55
            predict = " "; 
         else 
             switch l 
               case "Qdot" 
-                predict = "?";
-              case "Ap" 
+                if predict==""
+                  predict = "?";
+                endif
+            case "Ap" 
+              if predict==""
                 predict = "'";
-              case "Vir" 
+                endif
+            case "Vir" 
+              if predict==""
                 predict = ",";
-              case "Vdot" 
+                endif
+            case "Vdot" 
+              if predict==""
                 predict = ";";
-              case "Tir" 
+                endif
+            case "Tir" 
+              if predict==""
                 predict = "-";
-              case "Edot" 
+                endif
+            case "Edot" 
+              if predict==""
                 predict = "!";
-              case "Dot" 
-                predict = "." ;
-              case "Ddot" 
+                endif
+          case "Dot" 
+              if predict==""
+                predict = "." 
+                endif
+            case "Ddot" 
+              if predict==""
                 predict = ":";
+                endif
               otherwise 
                 predict=l;
             endswitch 
@@ -393,6 +426,7 @@ for j=1:nb_carac_col %Pour chaque ligne
       
     endfor 
     if hypert
+      if kech!=0
       ech=cell2mat(alpha{kech}(1));
       ech=ech(:,end/3:2*end/3);
       clear colorE
@@ -416,9 +450,36 @@ for j=1:nb_carac_col %Pour chaque ligne
           endif
         endfor
       endfor
+    else 
+      G=0;
+    endif
       rapE=colorE{3}{2}/colorE{2}{2};
-      if rapT/rapE > 0.7
-        predict=cstrcat("<strong style='color:rgb(",num2str(colorL(1)),",",num2str(colorL(2)),",",num2str(colorL(3)),");'>",predict,"</strong>");
+      G=rapT/rapE
+      if it && G > 0.63 && G < 10
+        if predict=="A" && vIt>250
+          predict=cstrcat("<em style='color:rgb(",num2str(colorL(1)),",",num2str(colorL(2)),",",num2str(colorL(3)),");'>",predict,"</em>");
+        elseif predict=="A" && vIt<250
+          predict=cstrcat("<strong style='color:rgb(",num2str(colorL(1)),",",num2str(colorL(2)),",",num2str(colorL(3)),");'>",predict,"</strong>");
+          else 
+          predict=cstrcat("<em><strong style='color:rgb(",num2str(colorL(1)),",",num2str(colorL(2)),",",num2str(colorL(3)),");'>",predict,"</strong></em>");
+        endif
+        disp("Gras et italique")
+        
+      elseif it
+        disp("Italique")
+        if predict=="Y" && vIt<110
+          predict=cstrcat("<span style='color:rgb(",num2str(colorL(1)),",",num2str(colorL(2)),",",num2str(colorL(3)),");'>",predict,"</span>");
+        else
+          predict=cstrcat("<em style='color:rgb(",num2str(colorL(1)),",",num2str(colorL(2)),",",num2str(colorL(3)),");'>",predict,"</em>");
+        endif
+        it=false;
+      elseif  G > 0.63 && G < 10
+        disp("Gras")
+        if predict=="I" && G<0.875
+          predict=cstrcat("<span style='color:rgb(",num2str(colorL(1)),",",num2str(colorL(2)),",",num2str(colorL(3)),");'>",predict,"</span>");
+        else
+          predict=cstrcat("<strong style='color:rgb(",num2str(colorL(1)),",",num2str(colorL(2)),",",num2str(colorL(3)),");'>",predict,"</strong>");
+        endif
       else
         predict=cstrcat("<span style='color:rgb(",num2str(colorL(1)),",",num2str(colorL(2)),",",num2str(colorL(3)),");'>",predict,"</span>");
       endif
