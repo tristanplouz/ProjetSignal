@@ -93,6 +93,16 @@ page=cstrcat("[..]<style>body{background:rgb(",num2str(colorBG(1)),",",num2str(c
 	\begin{lstlisting}[caption={Insertion de la couleur de la lettre dans Octave},language=Octave]
 predict=cstrcat("<span style='color:rgb(",num2str(colorL(1)),",",num2str(colorL(2)),",",num2str(colorL(3)),");'>",predict,"</span>");
 \end{lstlisting}
+	\paragraph{Optimisation}
+	Parcourir toutes l'image pour chercher chaque couleur est une technique un peu longue et pas vraiment utile. C'est pour cela que l'on ne parcourt pas l'image dans son entièreté mais seulement une colonne et une ligne tous les x, ainsi on obtient une image où les proportions de couleurs sont respectées et donc on accélère le traitement.
+	\begin{figure}[h]
+	\centering
+		\includegraphics[width=0.25\textwidth]{../illus/1s1.png}
+		\includegraphics[width=0.25\textwidth]{../illus/1s5.png}
+		\includegraphics[width=0.25\textwidth]{../illus/1s10.png}
+		\caption{Image en prenant: Toutes les lignes, 1 ligne sur 5 et 1 ligne sur 10}
+	\end{figure}
+	On prend donc 1 ligne sur 10 pour détecter la couleur de fond et une ligne sur 5 pour détecter la couleur de la lettre.
 	\subsection{Gras}
 	Pour détecter le \textbf{gras}, nous sommes partis du constat que la forme générale du caractère ne changeait pas, en effectuant des tests, nous pouvons nous apercevoir que le coefficient de corrélation ne diminue pas tant que ça et la lettre est encore détectable. Un point qui change est la surface d'occupation de la lettre sur la tuile, en effet une police grasse occupe plus de place qu'une police standard. Nous calculons donc le rapport d'occurrence de la couleur de lettre sur la couleur de fond pour la tuile mais aussi pour l'échantillon de notre base de données. Lorsque la police est grasse, on a un rapport plus élevé. En calculant le rapport de l’échantillon et de la tuile, on peut déterminer un seuil au dessus du quel la police est grasse.\\
 	Cette fois dans le code \texttt{HTML}, on injecte une balise de type \textsl{<strong>} en lui définissant le style, la couleur de la lettre, dans la balise.
@@ -105,12 +115,67 @@ endif
 \end{lstlisting}
 	\subsection{Italique}
 	Pour détecter l'\textit{italique}, on constate que en revanche, ici, la forme de la lettre change, elle subit une inclinaison.
+	En revanche détecter l'inclinaison d'une lettre est faisable, même si cela pose des propblèmes avec les lettres penchées de base comme: \texttt{A,V,X,W,Y,y,v,x,w,...}
+	Pou cela nous regardons les variations de la projection de la lettre. Nous calculons la moyenne colonne par colonne, suivant le profil de la courbe, on peut déterminer des propriétés de la lettre.
+	\begin{figure}[h]
+	\centering
+		\includegraphics[width=0.35\textwidth]{../illus/comp/projO.png}
+		\includegraphics[width=0.35\textwidth]{../illus/comp/projS.png}\\
+		\includegraphics[width=0.35\textwidth]{../illus/comp/projP.png}
+		\includegraphics[width=0.35\textwidth]{../illus/comp/projA.png}
+		\caption{Profil de certaines lettres: \texttt{O,S,P,A}, en rouge le normal et en blue l'italique}
+	\end{figure}
+	Pour certain caractère, c'est plus simple que pour d'autres.
+	Un fois que la lettre est détéctée comme étant en \textit{italique}, on la redresse d'un certain coefficiant pour cela, on décale chaque ligne de pixel de plus en plus en exécutant le code suivant:
+	\begin{lstlisting}[caption={Redressage de caractère dans Octave},language=Octave]
+ for h=1:length(tile)-1
+        tile(end-h,:)=[tile(end-h,1+round(h*length(tile(1,:))/(length(tile)*4.1)):end) tile(end-h,1:round(h*length(tile(1,:))/(length(tile)*4.1)))];
+       endfor
+\end{lstlisting}
+		Cette fois dans le code \texttt{HTML}, on injecte une balise de type \textsl{<em>} en lui définissant le style, la couleur de la lettre, dans la balise.
 	\subsection{Dimension}
+	Le premier essais représentait le texte en police standard, minuscule sur la page web, nous avons donc décidé de gérer une notion de dimension des caractères. Pour cela, on se base sur la taille des tuiles de recherche. Plus la tuile est grande plus la police de caractère sur la page web sera grande.
 	\section{Résultats}
+	\paragraph{Couleurs}
+	Voici les résultats de notre script sur le fichier \texttt{Couleur.png}.
+	\begin{figure}[h]
+	\centering
+		\includegraphics[height=0.25\textwidth]{../illus/Couleur.png}
+		\includegraphics[height=0.25\textwidth]{../illus/CouleurR.png}
+		\includegraphics[height=0.25\textwidth]{../illus/CouleurC.png}
+		\caption{Image, capture de la page web, capture du code}
+	\end{figure}
+	\paragraph{Gras}
+	Voici les résultats de notre script sur le fichier \texttt{Gras.png}.
+	\begin{figure}[h]
+	\centering
+		\includegraphics[height=0.25\textwidth]{../illus/Gras.png}
+		\includegraphics[height=0.25\textwidth]{../illus/GrasR.png}
+		\includegraphics[height=0.25\textwidth]{../illus/GrasC.png}
+		\caption{Image, capture de la page web, capture du code}
+	\end{figure}
+	\paragraph{Italique}
+	Voici les résultats de notre script sur le fichier \texttt{Italique.png}.
+	\begin{figure}[h]
+	\centering
+		\includegraphics[height=0.25\textwidth]{../illus/Italique.png}
+		\includegraphics[height=0.25\textwidth]{../illus/ItaliqueR.png}
+		\includegraphics[height=0.25\textwidth]{../illus/ItaliqueC.png}
+		\caption{Image, capture de la page web, capture du code}
+	\end{figure}
+	\paragraph{Mix Total}
+	Voici les résultats de notre script sur le fichier \texttt{Mix.png}.
+	\begin{figure}[h]
+	\centering
+		\includegraphics[height=0.25\textwidth]{../illus/Mix.png}
+		\includegraphics[height=0.25\textwidth]{../illus/MixR.png}
+		\includegraphics[height=0.25\textwidth]{../illus/MixC.png}
+		\caption{Image, capture de la page web, capture du code}
+	\end{figure}
 	\section{Conclusion}
-	Au fur et à mesure que le projet avancé, nous avons réussi à détecter de plus en plus d'éléments textuel et hypertextuel sur les images.
+	Au fur et à mesure que le projet avancé, nous avons réussi à détecter de plus en plus d'éléments textuel et hypertextuel sur les images. Même si l'italique reste encore problématique, nous avons réussi à remplir les principaux objectifs.
 	Le script que nous avons réalisé n'est pas le plus optimal il détecte relativement souvent des \textit{faux}, en effet la corrélation n'est pas le plus puissant et le plus optimisé des outils pour réaliser ce travail.
-	
+	De plus de nombreuses améliorations seraient encore à rajouter, comme par exemple la gestion de différentes tailles de caractères ou même de différentes polices.
 	\listoffigures
 	
 	\lstlistoflistings
